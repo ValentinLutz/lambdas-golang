@@ -19,6 +19,10 @@ default:
     parameters:
       watch: true
 
-  local_start_lambda:
+  local_invoke:
     parameters:
-      warm_containers: EAGER
+      warm_containers: LAZY
+
+  local_start_api:
+    parameters:
+      warm_containers: LAZY
