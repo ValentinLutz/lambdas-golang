@@ -14,6 +14,8 @@ type Cdk mg.Namespace
 
 // Synth synthesizes the CDK stack
 func (Cdk) Synth() error {
+	getOrSetDefaultStage()
+
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
 
@@ -42,5 +44,16 @@ func (Cdk) Deploy() error {
 	return sh.RunV(
 		"cdk",
 		"deploy",
+	)
+}
+
+// Destroy destroys the CDK stack
+func (Cdk) Destroy() error {
+	os.Chdir("./deployment-aws")
+	defer os.Chdir("..")
+
+	return sh.RunV(
+		"cdk",
+		"destroy",
 	)
 }

@@ -13,6 +13,11 @@ func getOrSetDefaultDatabaseEnvVars() {
 	getValueOrSetDefault("DB_PASS", "test")
 }
 
+func getOrSetDefaultStage() {
+	getValueOrSetDefault("REGION", "eu-central-1")
+	getValueOrSetDefault("ENVIRONMENT", "dev")
+}
+
 func getValueOrSetDefault(key string, defaultValue string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok {

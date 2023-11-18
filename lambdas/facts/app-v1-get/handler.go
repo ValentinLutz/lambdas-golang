@@ -7,6 +7,7 @@ import (
 	"math/rand"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/jmoiron/sqlx"
 )
 
 type fact struct {
@@ -18,9 +19,13 @@ type factEntity struct {
 	Text string `db:"fact_text"`
 }
 
-func Handler(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+type App struct {
+	Database *sqlx.DB
+}
+
+func (app *App) Handler(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var factEntities []factEntity
-	err := database.SelectContext(ctx, &factEntities, "SELECT fact_text FROM public.fact")
+	err := app.Database.SelectContext(ctx, &factEntities, "SELECT fact_text FROM public.fact")
 	if err != nil {
 		slog.Error(
 			"failed to select facts",

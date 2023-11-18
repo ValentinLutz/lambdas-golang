@@ -1,4 +1,4 @@
-module facts-lambda
+module root
 
 go 1.21
 

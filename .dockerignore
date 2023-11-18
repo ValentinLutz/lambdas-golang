@@ -1,0 +1,5 @@
+**/.idea
+**/deployment-aws
+**/deployment-docker
+**/magefiles
+**/test-functional

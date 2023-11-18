@@ -1,4 +1,4 @@
-package main
+package apputil
 
 import (
 	"fmt"
@@ -6,10 +6,6 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-)
-
-var (
-	database *sqlx.DB
 )
 
 type DatabaseConfig struct {

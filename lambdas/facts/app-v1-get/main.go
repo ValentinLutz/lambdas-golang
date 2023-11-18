@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
+	"root/libraries/apputil"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -18,14 +19,18 @@ func main() {
 	)
 	slog.SetDefault(logger)
 
-	dbConfig, err := NewDatabaseConfigFromEnv()
+	dbConfig, err := apputil.NewDatabaseConfigFromEnv()
 	if err != nil {
 		panic(err)
 	}
-	database, err = NewDatabase(dbConfig)
+	database, err := apputil.NewDatabase(dbConfig)
 	if err != nil {
 		panic(err)
 	}
 
-	lambda.Start(Handler)
+	app := &App{
+		Database: database,
+	}
+
+	lambda.Start(app.Handler)
 }
