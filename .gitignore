@@ -3,3 +3,7 @@
 
 # AWS SAM
 .aws-sam
+
+# CDK
+.cdk.staging
+cdk.out

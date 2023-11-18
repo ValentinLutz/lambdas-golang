@@ -12,15 +12,21 @@ type Lambda mg.Namespace
 
 // Build builds the lambda function
 func (Lambda) Build() error {
-	return sh.RunV("sam", "build")
-}
+	mg.Deps(Cdk.Synth)
 
-// Invoke invokes the lambda function locally
-func (Lambda) Invoke() error {
-	return sh.RunV("sam", "local", "invoke", "--docker-network", "facts-lambda-network")
+	return sh.RunV(
+		"sam", "build",
+		"--template", "./deployment-aws/cdk.out/stack.template.json",
+	)
 }
 
 // Start starts the lambda function locally
 func (Lambda) Start() error {
-	return sh.RunV("sam", "local", "start-api", "--docker-network", "facts-lambda-network")
+	mg.Deps(Lambda.Build)
+
+	return sh.RunV(
+		"sam", "local", "start-api",
+		"--config-file", "./deployment-docker/samconfig.yaml",
+		"--docker-network", "facts-lambda-network",
+	)
 }
