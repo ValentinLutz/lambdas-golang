@@ -17,7 +17,7 @@ type App struct {
 
 func (app *App) Handler(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var factEntities []shared.FactEntity
-	err := app.Database.SelectContext(ctx, &factEntities, "SELECT fact_text FROM public.fact")
+	err := app.Database.SelectContext(ctx, &factEntities, "SELECT fact_id, fact_text FROM public.fact")
 	if err != nil {
 		slog.Error(
 			"failed to select facts",

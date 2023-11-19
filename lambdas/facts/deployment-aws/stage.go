@@ -7,7 +7,7 @@ import (
 
 var stages = map[string]*StageProps{
 	"eu-central-1-dev": {
-		account:     "489721517942",
+		account:     "000000000000",
 		region:      "eu-central-1",
 		environment: "dev",
 	},

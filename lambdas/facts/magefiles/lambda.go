@@ -17,6 +17,8 @@ func (Lambda) Build() error {
 	return sh.RunV(
 		"sam", "build",
 		"--template", "./deployment-aws/cdk.out/stack.template.json",
+		"--cached",
+		"--parallel",
 	)
 }
 
@@ -26,7 +28,8 @@ func (Lambda) Start() error {
 
 	return sh.RunV(
 		"sam", "local", "start-api",
-		"--config-file", "./deployment-docker/samconfig.yaml",
-		"--docker-network", "facts-lambda-network",
+		"--env-vars", "./deployment-docker/sam/env.json",
+		"--docker-network", "lambda-network",
+		"--warm-containers", "LAZY",
 	)
 }

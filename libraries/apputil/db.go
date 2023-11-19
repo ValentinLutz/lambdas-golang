@@ -16,7 +16,14 @@ type DatabaseConfig struct {
 	Password string
 }
 
-func NewDatabaseConfigFromEnv() (*DatabaseConfig, error) {
+func NewDatabaseConfig(secret Secret) (*DatabaseConfig, error) {
+	if secret.Username == "" {
+		return nil, fmt.Errorf("secret username not set")
+	}
+	if secret.Password == "" {
+		return nil, fmt.Errorf("secret password not set")
+	}
+
 	host, ok := os.LookupEnv("DB_HOST")
 	if !ok {
 		return nil, fmt.Errorf("env DB_HOST not set")
@@ -29,21 +36,13 @@ func NewDatabaseConfigFromEnv() (*DatabaseConfig, error) {
 	if !ok {
 		return nil, fmt.Errorf("env DB_NAME not set")
 	}
-	user, ok := os.LookupEnv("DB_USER")
-	if !ok {
-		return nil, fmt.Errorf("env DB_USER not set")
-	}
-	pass, ok := os.LookupEnv("DB_PASS")
-	if !ok {
-		return nil, fmt.Errorf("env DB_PASS not set")
-	}
 
 	return &DatabaseConfig{
 		Host:     host,
 		Port:     port,
 		Name:     name,
-		User:     user,
-		Password: pass,
+		User:     secret.Username,
+		Password: secret.Password,
 	}, nil
 }
 

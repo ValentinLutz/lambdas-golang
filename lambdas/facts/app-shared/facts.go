@@ -9,6 +9,6 @@ type FactResponse struct {
 }
 
 type FactEntity struct {
-	//ID   int    `db:"fact_id"`
+	Id   int    `db:"fact_id"`
 	Text string `db:"fact_text"`
 }

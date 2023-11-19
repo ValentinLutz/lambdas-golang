@@ -18,11 +18,11 @@ func NewGetFunction(stack awscdk.Stack) awslambda.Function {
 		stack, jsii.String("GetFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
 			Code: dockerImageCode,
 			Environment: &map[string]*string{
-				"DB_HOST": jsii.String("database-postgres"),
-				"DB_PORT": jsii.String("5432"),
-				"DB_NAME": jsii.String("test"),
-				"DB_USER": jsii.String("test"),
-				"DB_PASS": jsii.String("test"),
+				"DB_HOST":          jsii.String(""),
+				"DB_PORT":          jsii.String(""),
+				"DB_NAME":          jsii.String(""),
+				"DB_SECRET_ID":     jsii.String(""),
+				"AWS_ENDPOINT_URL": jsii.String(""),
 			},
 		},
 	)
@@ -38,11 +38,11 @@ func NewPostFunction(stack awscdk.Stack) awslambda.Function {
 		stack, jsii.String("PostFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
 			Code: dockerImageCode,
 			Environment: &map[string]*string{
-				"DB_HOST": jsii.String("database-postgres"),
-				"DB_PORT": jsii.String("5432"),
-				"DB_NAME": jsii.String("test"),
-				"DB_USER": jsii.String("test"),
-				"DB_PASS": jsii.String("test"),
+				"DB_HOST":          jsii.String(""),
+				"DB_PORT":          jsii.String(""),
+				"DB_NAME":          jsii.String(""),
+				"DB_SECRET_ID":     jsii.String(""),
+				"AWS_ENDPOINT_URL": jsii.String(""),
 			},
 		},
 	)

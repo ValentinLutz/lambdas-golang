@@ -13,11 +13,21 @@ services:
       test: [ "CMD", "pg_isready", "-q", "-d", $DB_NAME, "-U", $DB_USER ]
       interval: 5s
     networks:
-      - facts-lambda-network
+      - lambda-network
     ports:
       - '5432:5432'
 
+  aws-localstack:
+    image: localstack/localstack:3.0.0
+    container_name: aws-localstack
+    volumes:
+      - ./localstack:/etc/localstack/init:ro
+    networks:
+      - lambda-network
+    ports:
+      - '4566:4566'
+
 networks:
-  facts-lambda-network:
-    name: facts-lambda-network
+  lambda-network:
+    name: lambda-network
     driver: bridge
