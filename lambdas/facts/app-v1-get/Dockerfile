@@ -3,6 +3,7 @@ WORKDIR /build
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 COPY ./libraries ./libraries
+COPY ./lambdas/facts/app-shared ./lambdas/facts/app-shared
 COPY ./lambdas/facts/app-v1-get ./
 RUN go build -tags lambda.norpc -o main
 

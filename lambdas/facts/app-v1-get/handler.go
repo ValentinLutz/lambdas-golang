@@ -5,26 +5,18 @@ import (
 	"encoding/json"
 	"log/slog"
 	"math/rand"
+	shared "root/lambdas/facts/app-shared"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/jmoiron/sqlx"
 )
-
-type fact struct {
-	Text string `json:"text"`
-}
-
-type factEntity struct {
-	//ID   int    `db:"fact_id"`
-	Text string `db:"fact_text"`
-}
 
 type App struct {
 	Database *sqlx.DB
 }
 
 func (app *App) Handler(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var factEntities []factEntity
+	var factEntities []shared.FactEntity
 	err := app.Database.SelectContext(ctx, &factEntities, "SELECT fact_text FROM public.fact")
 	if err != nil {
 		slog.Error(
@@ -38,7 +30,7 @@ func (app *App) Handler(ctx context.Context, _ events.APIGatewayProxyRequest) (e
 
 	rand.Intn(len(factEntities))
 	randomFactEntity := factEntities[rand.Intn(len(factEntities))]
-	randomFactBody, err := json.Marshal(fact{Text: randomFactEntity.Text})
+	randomFactBody, err := json.Marshal(shared.FactResponse{Text: randomFactEntity.Text})
 	if err != nil {
 		slog.Error(
 			"failed to marshal random fact",
