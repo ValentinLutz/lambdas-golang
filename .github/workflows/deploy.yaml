@@ -15,10 +15,8 @@ on:
         type: string
 
 jobs:
-  build-app:
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
