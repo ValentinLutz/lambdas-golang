@@ -1,0 +1,34 @@
+on: [ push ]
+
+jobs:
+  create-version:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: ${{ github.ref_name }}
+    outputs:
+      version: ${{ steps.create.outputs.version }}
+    steps:
+      - name: Create project version
+        id: create
+        run: |
+          if [ 'master' == "$BRANCH"  ]
+          then
+            echo "version=$(date +"%y.%m.%d.%H%M%S")" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-facts:
+    uses: ./.github/workflows/deploy.yaml
+    needs:
+      - create-version
+    with:
+      project-path: ./lambdas/facts
+      version: ${{ needs.create-version.outputs.version }}
+      src: |
+        src:
+          - 'go/go.mod'
+          - 'go/go.sum'
+          - 'go/libraries/**'
+          - 'go/lambdas/facts/**'
+    secrets: inherit

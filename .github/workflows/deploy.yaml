@@ -1,0 +1,67 @@
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      src:
+        required: true
+        type: string
+      region:
+        required: true
+        type: string
+
+jobs:
+  build-app:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: ${{ inputs.src }}
+
+      - name: set up GO
+        if: steps.changes.outputs.src == 'true'
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21.4'
+          cache: true
+          cache-dependency-path: go/go.sum
+
+      - name: golangci-lint
+        if: steps.changes.outputs.src == 'true'
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.55.2
+          skip-pkg-cache: true
+
+      - name: cdk diff
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'diff'
+          actions_comment: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ inputs.region }}
+
+      - name: cdk deploy
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          cdk_args: '--require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ inputs.region }}
