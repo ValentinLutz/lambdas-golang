@@ -23,7 +23,7 @@ jobs:
     environment: ${{ inputs.environment }}
     env:
       REGION: ${{ inputs.region }}
-      ENVIRONMENT: ${{ inputs.environment }}
+      ENVIRONMENT: ${{ inputs.region }}-${{ inputs.environment }}
       VERSION: ${{ inputs.version }}
     steps:
       - name: cdk deploy
