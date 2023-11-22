@@ -7,6 +7,9 @@ on:
       region:
         required: true
         type: string
+      environment:
+        required: true
+        type: string
       version:
         required: true
         type: string
@@ -20,6 +23,9 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
+    env:
+      REGION: ${{ inputs.region }}
+      ENVIRONMENT: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v3
 
@@ -55,7 +61,6 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ inputs.region }}
 
       - if: steps.changes.outputs.src == 'true'
         name: cdk deploy
@@ -63,4 +68,3 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ inputs.region }}

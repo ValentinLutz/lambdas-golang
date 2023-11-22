@@ -11,7 +11,7 @@ var stages = map[string]*StageProps{
 		region:      "eu-central-1",
 		environment: "dev",
 	},
-	"eu-central-1-prod": {
+	"eu-central-1-test": {
 		account:     "489721517942",
 		region:      "eu-central-1",
 		environment: "test",
