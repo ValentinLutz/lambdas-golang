@@ -23,6 +23,7 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
+    environment: ${{ inputs.environment }}
     env:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
