@@ -1,0 +1,81 @@
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        required: true
+        type: string
+      region:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      src:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    env:
+      REGION: ${{ inputs.region }}
+      ENVIRONMENT: ${{ inputs.environment }}
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: ${{ inputs.src }}
+
+      - if: steps.changes.outputs.src == 'true'
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21.4'
+          cache: true
+          cache-dependency-path: ./go.sum
+
+      - if: steps.changes.outputs.src == 'true'
+        uses: magefile/mage-action@v3
+        with:
+          install-only: true
+
+      - if: steps.changes.outputs.src == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - if: steps.changes.outputs.src == 'true'
+        name: install aws-cdk
+        run: npm install -g aws-cdk@2.110.0
+
+      - if: steps.changes.outputs.src == 'true'
+        name: cdk diff
+        run: mage cdk:diff
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - if: steps.changes.outputs.src == 'true'
+        name: cdk deploy
+        run: mage cdk:deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy:
+    uses: ./.github/workflows/deploy.yaml
+    needs:
+      - build
+    with:
+      project-path: ${{ inputs.project-path }}
+      region: ${{ inputs.region }}
+      environment: ${{ inputs.environment }}
+      version: ${{ inputs.version }}
