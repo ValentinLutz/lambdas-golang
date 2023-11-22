@@ -32,4 +32,5 @@ jobs:
           - 'go/go.sum'
           - 'go/libraries/**'
           - 'go/lambdas/facts/**'
+          - '**'
     secrets: inherit
