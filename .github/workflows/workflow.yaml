@@ -19,7 +19,7 @@ jobs:
           fi
 
   facts:
-    uses: ./.github/workflows/deploy.yaml
+    uses: ./.github/workflows/build.yaml
     needs:
       - create-version
     with:
