@@ -24,6 +24,7 @@ jobs:
       - create-version
     with:
       project-path: ./lambdas/facts
+      region: eu-central-1
       version: ${{ needs.create-version.outputs.version }}
       src: |
         src:

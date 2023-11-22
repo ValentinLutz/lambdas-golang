@@ -4,13 +4,13 @@ on:
       project-path:
         required: true
         type: string
+      region:
+        required: true
+        type: string
       version:
         required: true
         type: string
       src:
-        required: true
-        type: string
-      region:
         required: true
         type: string
 
