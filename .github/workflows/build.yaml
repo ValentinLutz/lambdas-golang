@@ -33,14 +33,14 @@ jobs:
               - 'libraries/**'
               - '${{ inputs.project-path }}/**'
 
-  build:
+  deploy:
     runs-on: ubuntu-latest
     needs:
       - changes
-    if: ${{ needs.changes.outputs.files-changed == 'true' }}
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
+    environment: ${{ inputs.region }}-${{ inputs.environment }}
     env:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
@@ -65,19 +65,6 @@ jobs:
       - name: install aws-cdk
         run: npm install -g aws-cdk@2.110.0
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    defaults:
-      run:
-        working-directory: ${{ inputs.project-path }}
-    environment: ${{ inputs.region }}-${{ inputs.environment }}
-    env:
-      REGION: ${{ inputs.region }}
-      ENVIRONMENT: ${{ inputs.environment }}
-      VERSION: ${{ inputs.version }}
-    steps:
       - name: cdk diff
         run: mage cdk:diff
         env:
