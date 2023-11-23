@@ -27,11 +27,11 @@ jobs:
         with:
           filters: |
             files:
+              - '.github/workflows/**'
               - 'go.mod'
               - 'go.sum'
               - 'libraries/**'
               - '${{ inputs.project-path }}/**'
-              - '**'
 
   build:
     runs-on: ubuntu-latest
@@ -78,15 +78,13 @@ jobs:
       ENVIRONMENT: ${{ inputs.environment }}
       VERSION: ${{ inputs.version }}
     steps:
-      - if: steps.changes.outputs.src == 'true'
-        name: cdk diff
+      - name: cdk diff
         run: mage cdk:diff
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - if: steps.changes.outputs.src == 'true'
-        name: cdk deploy
+      - name: cdk deploy
         run: mage cdk:deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

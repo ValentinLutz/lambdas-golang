@@ -19,12 +19,14 @@ jobs:
           fi
 
   facts:
+    strategy:
+      matrix:
+        project-path: [ lambdas/facts ]
     uses: ./.github/workflows/build.yaml
     needs:
       - create-version
     with:
-      project-path: lambdas/facts
+      project-path: ${{ matrix.project-path }}
       region: eu-central-1
       environment: test
       version: ${{ needs.create-version.outputs.version }}
-    secrets: inherit
