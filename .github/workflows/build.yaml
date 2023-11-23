@@ -21,7 +21,7 @@ jobs:
   changes:
     uses: ./.github/workflows/changes.yaml
     with:
-      src-path: ${{ inputs.src }}
+      src: ${{ inputs.src }}
 
   build:
     runs-on: ubuntu-latest
