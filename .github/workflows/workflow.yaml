@@ -23,15 +23,8 @@ jobs:
     needs:
       - create-version
     with:
-      project-path: ./lambdas/facts
+      project-path: lambdas/facts
       region: eu-central-1
       environment: test
       version: ${{ needs.create-version.outputs.version }}
-      src: |
-        src:
-          - 'go/go.mod'
-          - 'go/go.sum'
-          - 'go/libraries/**'
-          - 'go/lambdas/facts/**'
-          - '**'
     secrets: inherit
