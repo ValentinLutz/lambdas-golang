@@ -19,7 +19,7 @@ func main() {
 	tags.Add(jsii.String("environment"), &config.environment, &awscdk.TagProps{})
 	tags.Add(jsii.String("version"), jsii.String(os.Getenv("VERSION")), &awscdk.TagProps{})
 
-	NewStack(app, "stack", config)
+	NewStack(app, "FactsResource", config)
 
 	app.Synth(nil)
 }

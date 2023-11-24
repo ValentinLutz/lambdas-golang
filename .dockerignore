@@ -1,4 +1,9 @@
 **/.idea
+**/.github
+**/.gitignore
+**/README.md
+**/LICENSE
+
 **/deployment-aws
 **/deployment-docker
 **/magefiles

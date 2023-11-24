@@ -1,15 +1,6 @@
 {
   "app": "go mod download && go run ./...",
   "requireApproval": "never",
-  "watch": {
-    "include": [
-      "**"
-    ],
-    "exclude": [
-      "cdk*.json",
-      "**/*test.go"
-    ]
-  },
   "context": {
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,

@@ -16,6 +16,7 @@ func getOrSetDefaultDatabaseEnvVars() {
 func getOrSetDefaultStage() {
 	getValueOrSetDefault("REGION", "eu-central-1")
 	getValueOrSetDefault("ENVIRONMENT", "dev")
+	getValueOrSetDefault("VERSION", "latest")
 }
 
 func getValueOrSetDefault(key string, defaultValue string) string {
