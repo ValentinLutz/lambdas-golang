@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -19,6 +20,10 @@ var stageConfigs = map[string]*StageConfig{
 			name:   "test",
 			secret: "database-secret",
 		},
+		lambdaConfig: LambdaConfig{
+			// use your local platform for faster builds
+			architecture: awslambda.Architecture_X86_64(),
+		},
 	},
 	"eu-central-1-test": {
 		account:     "489721517942",
@@ -29,6 +34,9 @@ var stageConfigs = map[string]*StageConfig{
 			port:   "",
 			name:   "",
 			secret: "",
+		},
+		lambdaConfig: LambdaConfig{
+			architecture: awslambda.Architecture_ARM_64(),
 		},
 	},
 	"eu-central-1-prod": {
@@ -41,6 +49,9 @@ var stageConfigs = map[string]*StageConfig{
 			name:   "",
 			secret: "",
 		},
+		lambdaConfig: LambdaConfig{
+			architecture: awslambda.Architecture_ARM_64(),
+		},
 	},
 }
 
@@ -51,12 +62,17 @@ type DatabaseConfig struct {
 	secret string
 }
 
+type LambdaConfig struct {
+	architecture awslambda.Architecture
+}
+
 type StageConfig struct {
 	account       string
 	region        string
 	environment   string
 	endpointUrl   *string
 	databaseProps DatabaseConfig
+	lambdaConfig  LambdaConfig
 }
 
 func NewStageConfig() *StageConfig {

@@ -26,8 +26,9 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 
 	return awslambda.NewDockerImageFunction(
 		stack, jsii.String("GetFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
-			Code:        dockerImageCode,
-			Environment: &env,
+			Code:         dockerImageCode,
+			Environment:  &env,
+			Architecture: config.lambdaConfig.architecture,
 		},
 	)
 }
@@ -50,8 +51,9 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 	}
 	return awslambda.NewDockerImageFunction(
 		stack, jsii.String("PostFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
-			Code:        dockerImageCode,
-			Environment: &env,
+			Code:         dockerImageCode,
+			Environment:  &env,
+			Architecture: config.lambdaConfig.architecture,
 		},
 	)
 }

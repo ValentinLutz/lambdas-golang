@@ -18,6 +18,7 @@ func (Lambda) Build() error {
 		"sam", "build",
 		"--template", "./deployment-aws/cdk.out/FactsResource.template.json",
 		"--cached",
+		"--skip-pull-image",
 		//"--parallel",
 	)
 }

@@ -18,7 +18,7 @@ services:
       - '5432:5432'
 
   aws-localstack:
-    image: localstack/localstack:3.0.0
+    image: localstack/localstack:3.0.1
     container_name: aws-localstack
     volumes:
       - ./localstack:/etc/localstack/init:ro
