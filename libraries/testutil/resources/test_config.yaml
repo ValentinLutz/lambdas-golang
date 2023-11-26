@@ -1,0 +1,10 @@
+# Global config
+base_url: http://127.0.0.1:74298
+
+# Database config
+database:
+  host: 127.0.0.1
+  port: 9231
+  user: "a"
+  password: "b"
+  database: "c"

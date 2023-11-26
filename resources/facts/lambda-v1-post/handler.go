@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log/slog"
-	shared "root/lambdas/facts/app-shared"
+	shared "root/resources/facts/lambda-shared"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/jmoiron/sqlx"
@@ -26,7 +26,7 @@ func (app *App) Handler(ctx context.Context, r events.APIGatewayProxyRequest) (e
 	factEntity := shared.FactEntity{
 		Text: factRequest.Text,
 	}
-	_, err = app.Database.NamedExecContext(ctx, "INSERT INTO public.fact (fact_text) VALUES (:fact_text)", factEntity)
+	_, err = app.Database.NamedExecContext(ctx, "INSERT INTO facts_resource.fact (fact_text) VALUES (:fact_text)", factEntity)
 	if err != nil {
 		slog.Error("failed to insert fact", slog.Any("err", err))
 		return events.APIGatewayProxyResponse{

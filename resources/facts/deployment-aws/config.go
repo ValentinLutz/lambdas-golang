@@ -9,10 +9,10 @@ import (
 )
 
 var stageConfigs = map[string]*StageConfig{
-	"eu-central-1-dev": {
+	"eu-central-1-local": {
 		account:     "000000000000",
 		region:      "eu-central-1",
-		environment: "dev",
+		environment: "local",
 		endpointUrl: jsii.String("http://aws-localstack:4566"),
 		databaseProps: DatabaseConfig{
 			host:   "database-postgres",

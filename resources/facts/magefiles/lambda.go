@@ -30,6 +30,6 @@ func (Lambda) Start() error {
 	return sh.RunV(
 		"sam", "local", "start-api",
 		"--docker-network", "lambda-network",
-		"--warm-containers", "LAZY",
+		"--warm-containers", "EAGER",
 	)
 }

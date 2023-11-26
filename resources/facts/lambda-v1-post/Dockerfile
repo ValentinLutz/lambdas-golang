@@ -3,8 +3,8 @@ WORKDIR /build
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 COPY ./libraries ./libraries
-COPY ./lambdas/facts/app-shared ./lambdas/facts/app-shared
-COPY ./lambdas/facts/app-v1-post ./
+COPY ./resources/facts/lambda-shared ./resources/facts/lambda-shared
+COPY ./resources/facts/lambda-v1-post ./
 RUN go build -tags lambda.norpc -o main
 
 FROM alpine:3.18

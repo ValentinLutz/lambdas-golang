@@ -1,33 +1,33 @@
-on: [ push ]
-
-jobs:
-  create-version:
-    runs-on: ubuntu-latest
-    env:
-      BRANCH: ${{ github.ref_name }}
-    outputs:
-      version: ${{ steps.create.outputs.version }}
-    steps:
-      - name: Create project version
-        id: create
-        run: |
-          if [ 'master' == "$BRANCH"  ]
-          then
-            echo "version=$(date +"%y.%m.%d.%H%M%S")" >> $GITHUB_OUTPUT
-          else
-            echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
-          fi
-
-  facts:
-    uses: ./.github/workflows/build.yaml
-    strategy:
-      matrix:
-        project-path: [ lambdas/facts ]
-    needs:
-      - create-version
-    secrets: inherit
-    with:
-      project-path: ${{ matrix.project-path }}
-      region: eu-central-1
-      environment: test
-      version: ${{ needs.create-version.outputs.version }}
+#on: [ push ]
+#
+#jobs:
+#  create-version:
+#    runs-on: ubuntu-latest
+#    env:
+#      BRANCH: ${{ github.ref_name }}
+#    outputs:
+#      version: ${{ steps.create.outputs.version }}
+#    steps:
+#      - name: Create project version
+#        id: create
+#        run: |
+#          if [ 'master' == "$BRANCH"  ]
+#          then
+#            echo "version=$(date +"%y.%m.%d.%H%M%S")" >> $GITHUB_OUTPUT
+#          else
+#            echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
+#          fi
+#
+#  facts:
+#    uses: ./.github/workflows/build.yaml
+#    strategy:
+#      matrix:
+#        project-path: [ resources/facts ]
+#    needs:
+#      - create-version
+#    secrets: inherit
+#    with:
+#      project-path: ${{ matrix.project-path }}
+#      region: eu-central-1
+#      environment: test
+#      version: ${{ needs.create-version.outputs.version }}

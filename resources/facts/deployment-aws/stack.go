@@ -11,7 +11,7 @@ import (
 func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
 	dockerImageCode := awslambda.DockerImageCode_FromImageAsset(
 		jsii.String("../../../"), &awslambda.AssetImageCodeProps{
-			File: jsii.String("./lambdas/facts/app-v1-get/Dockerfile"),
+			File: jsii.String("./resources/facts/lambda-v1-get/Dockerfile"),
 		},
 	)
 	env := map[string]*string{
@@ -36,7 +36,7 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
 	dockerImageCode := awslambda.DockerImageCode_FromImageAsset(
 		jsii.String("../../../"), &awslambda.AssetImageCodeProps{
-			File: jsii.String("./lambdas/facts/app-v1-post/Dockerfile"),
+			File: jsii.String("./resources/facts/lambda-v1-post/Dockerfile"),
 		},
 	)
 

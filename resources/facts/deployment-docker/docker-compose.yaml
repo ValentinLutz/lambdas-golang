@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  database-postgres:
+    image: postgres:15.4-alpine3.18
+    container_name: database-postgres
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASS
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:rw
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", $DB_NAME, "-U", $DB_USER ]
+      interval: 5s
+    networks:
+      - lambda-network
+    ports:
+      - '5432:5432'
+
+  database-flyway-migration:
+    image: flyway/flyway:10.1-alpine
+    container_name: database-flyway-migration
+    command: [ 'clean', 'migrate', "-user=${DB_USER}", "-password=${DB_PASS}" ]
+    volumes:
+      - ../migration-database/migration:/flyway/sql/migration:ro
+      - ../migration-database/eu-central-1-local.conf:/flyway/conf/flyway.conf:ro
+    networks:
+      - lambda-network
+    depends_on:
+      - database-postgres
+
+  aws-localstack:
+    image: localstack/localstack:3.0.1
+    container_name: aws-localstack
+    volumes:
+      - ./localstack:/etc/localstack/init:ro
+    networks:
+      - lambda-network
+    ports:
+      - '4566:4566'
+
+networks:
+  lambda-network:
+    name: lambda-network
+    driver: bridge

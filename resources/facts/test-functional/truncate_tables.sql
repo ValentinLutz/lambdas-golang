@@ -1,0 +1,1 @@
+TRUNCATE TABLE facts_resource.fact;
