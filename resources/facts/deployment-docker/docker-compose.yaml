@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: $DB_NAME
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASS
-    volumes:
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:rw
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", $DB_NAME, "-U", $DB_USER ]
       interval: 5s
@@ -27,7 +25,8 @@ services:
     networks:
       - lambda-network
     depends_on:
-      - database-postgres
+      database-postgres:
+        condition: service_healthy
 
   aws-localstack:
     image: localstack/localstack:3.0.1
