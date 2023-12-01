@@ -12,6 +12,29 @@ import (
 
 type Docker mg.Namespace
 
+// Build builds the lambda functions with docker
+func (Docker) Build() error {
+	os.Chdir("../../")
+	defer os.Chdir("..")
+
+	err := sh.RunV(
+		"docker",
+		"build",
+		"--file", "resources/facts/lambda-v1-get/Dockerfile",
+		".",
+	)
+	if err != nil {
+		return err
+	}
+
+	return sh.RunV(
+		"docker",
+		"build",
+		"--file", "resources/facts/lambda-v1-post/Dockerfile",
+		".",
+	)
+}
+
 // Up starts the docker-compose stack
 func (Docker) Up() error {
 	getOrSetDefaultDatabaseEnvVars()

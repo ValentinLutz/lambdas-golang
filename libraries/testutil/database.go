@@ -8,11 +8,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Database struct {
-	*sqlx.DB
-}
-
-func NewDatabase(config *Config) *Database {
+func NewDatabase(config *Config) *sqlx.DB {
 	psqlInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Database.Host,
@@ -27,10 +23,10 @@ func NewDatabase(config *Config) *Database {
 		panic(err)
 	}
 
-	return &Database{db}
+	return db
 }
 
-func LoadAndExec(db *Database, path string) {
+func LoadAndExec(db *sqlx.DB, path string) {
 	query := LoadQuery(path)
 	Exec(db, query)
 }
@@ -44,7 +40,7 @@ func LoadQuery(path string) string {
 	return string(query)
 }
 
-func Exec(db *Database, query string) {
+func Exec(db *sqlx.DB, query string) {
 	_, err := db.Exec(query)
 	if err != nil {
 		panic(err)

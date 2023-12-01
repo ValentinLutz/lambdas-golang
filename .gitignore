@@ -7,3 +7,7 @@
 # CDK
 .cdk.staging
 cdk.out
+
+# Testing
+coverage.out
+coverage.html

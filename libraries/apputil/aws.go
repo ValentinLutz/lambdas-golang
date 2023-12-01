@@ -23,7 +23,7 @@ func GetSecret(config aws.Config, secretId string) (Secret, error) {
 		},
 	)
 	if err != nil {
-		return Secret{}, fmt.Errorf("failed to get secret: %w", err)
+		return Secret{}, fmt.Errorf("failed to get secret with id %s: %w", secretId, err)
 	}
 
 	var secret Secret
