@@ -37,7 +37,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: GetArchitecture(),
+			architecture: awslambda.Architecture_ARM_64(),
 		},
 	},
 	"eu-central-1-e2e": {
@@ -51,7 +51,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: GetArchitecture(),
+			architecture: awslambda.Architecture_ARM_64(),
 		},
 	},
 	"eu-central-1-prod": {
@@ -65,7 +65,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: GetArchitecture(),
+			architecture: awslambda.Architecture_ARM_64(),
 		},
 	},
 }
