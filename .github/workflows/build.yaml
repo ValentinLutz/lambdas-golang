@@ -17,9 +17,6 @@ on:
 jobs:
   changes:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.project-path }}
     outputs:
       files-changed: ${{ steps.changed.outputs.files }}
     steps:
