@@ -14,8 +14,6 @@ type Cdk mg.Namespace
 
 // Synth synthesizes the CDK stack
 func (Cdk) Synth() error {
-	mg.Deps(Clean)
-
 	getOrSetDefaultStage()
 
 	os.Chdir("./deployment-aws")

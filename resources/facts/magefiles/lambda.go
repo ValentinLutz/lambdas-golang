@@ -16,7 +16,7 @@ func (Lambda) Build() error {
 
 	return sh.RunV(
 		"sam", "build",
-		"--template", "./deployment-aws/cdk.out/FactsResource.template.json",
+		"--template", "./deployment-aws/cdk.out/facts-resource-eu-central-1-local.template.json",
 		"--cached",
 		"--skip-pull-image",
 		//"--parallel",
