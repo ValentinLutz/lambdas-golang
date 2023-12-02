@@ -21,7 +21,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "database-secret",
 		},
 		lambdaConfig: LambdaConfig{
-			// use your local platform for faster builds
+			// use your local architecture for faster builds
 			architecture: awslambda.Architecture_X86_64(),
 		},
 	},
@@ -29,6 +29,20 @@ var stageConfigs = map[string]*StageConfig{
 		account:     "489721517942",
 		region:      "eu-central-1",
 		environment: "test",
+		databaseProps: DatabaseConfig{
+			host:   "",
+			port:   "",
+			name:   "",
+			secret: "",
+		},
+		lambdaConfig: LambdaConfig{
+			architecture: awslambda.Architecture_ARM_64(),
+		},
+	},
+	"eu-central-1-e2e": {
+		account:     "489721517942",
+		region:      "eu-central-1",
+		environment: "e2e",
 		databaseProps: DatabaseConfig{
 			host:   "",
 			port:   "",
@@ -92,4 +106,8 @@ func NewStageConfig() *StageConfig {
 		panic(fmt.Errorf("stage config %s not found", stageKey))
 	}
 	return stage
+}
+
+func NewIdWithStage(stage *StageConfig, id string) *string {
+	return jsii.String(id + "-" + stage.region + "-" + stage.environment)
 }

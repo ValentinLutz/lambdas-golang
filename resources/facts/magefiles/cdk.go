@@ -29,10 +29,6 @@ func (Cdk) Synth() error {
 
 // Diff diffs the CDK stack
 func (Cdk) Diff() error {
-	mg.Deps(Clean)
-
-	getOrSetDefaultStage()
-
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
 

@@ -67,3 +67,19 @@ func (Docker) Down() error {
 		"down",
 	)
 }
+
+// Logs shows the logs of the docker-compose stack
+func (Docker) Logs() error {
+	getOrSetDefaultDatabaseEnvVars()
+
+	os.Chdir("./deployment-docker")
+	defer os.Chdir("..")
+
+	return sh.RunV(
+		"docker",
+		"compose",
+		"--file", "./docker-compose.yaml",
+		"logs",
+		"-f",
+	)
+}

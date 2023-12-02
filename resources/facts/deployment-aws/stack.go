@@ -25,7 +25,7 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 	}
 
 	return awslambda.NewDockerImageFunction(
-		stack, jsii.String("GetFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
+		stack, NewIdWithStage(config, "facts-function-v1-get"), &awslambda.DockerImageFunctionProps{
 			Code:         dockerImageCode,
 			Environment:  &env,
 			Architecture: config.lambdaConfig.architecture,
@@ -50,7 +50,7 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
 	return awslambda.NewDockerImageFunction(
-		stack, jsii.String("PostFactsFunctionV1"), &awslambda.DockerImageFunctionProps{
+		stack, NewIdWithStage(config, "facts-function-v1-post"), &awslambda.DockerImageFunctionProps{
 			Code:         dockerImageCode,
 			Environment:  &env,
 			Architecture: config.lambdaConfig.architecture,
@@ -62,34 +62,45 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 	getFunction := NewGetFunction(stack, config)
 
 	lambdaRestApi := awsapigateway.NewLambdaRestApi(
-		stack, jsii.String("FactsRestApi"), &awsapigateway.LambdaRestApiProps{
+		stack, NewIdWithStage(config, "facts-rest-api"), &awsapigateway.LambdaRestApiProps{
 			Proxy:   jsii.Bool(false),
 			Handler: getFunction,
+			DeployOptions: &awsapigateway.StageOptions{
+				StageName: jsii.String(config.environment),
+			},
 		},
 	)
 
-	factsResource := lambdaRestApi.Root().AddResource(
+	v1 := lambdaRestApi.Root().AddResource(
+		jsii.String("v1"), &awsapigateway.ResourceOptions{},
+	)
+
+	factsResourceV1 := v1.AddResource(
 		jsii.String("facts"), &awsapigateway.ResourceOptions{},
 	)
 
-	factsResource.AddMethod(
+	factsResourceV1.AddMethod(
 		jsii.String("GET"),
 		awsapigateway.NewLambdaIntegration(getFunction, &awsapigateway.LambdaIntegrationOptions{}),
-		&awsapigateway.MethodOptions{},
+		&awsapigateway.MethodOptions{
+			AuthorizationType: awsapigateway.AuthorizationType_IAM,
+		},
 	)
 
 	postFunction := NewPostFunction(stack, config)
-	factsResource.AddMethod(
+	factsResourceV1.AddMethod(
 		jsii.String("POST"),
 		awsapigateway.NewLambdaIntegration(postFunction, &awsapigateway.LambdaIntegrationOptions{}),
-		&awsapigateway.MethodOptions{},
+		&awsapigateway.MethodOptions{
+			AuthorizationType: awsapigateway.AuthorizationType_IAM,
+		},
 	)
 	return stack
 }
 
-func NewStack(scope constructs.Construct, id string, config *StageConfig) awscdk.Stack {
+func NewStack(scope constructs.Construct, id *string, config *StageConfig) awscdk.Stack {
 	stack := awscdk.NewStack(
-		scope, &id, &awscdk.StackProps{Env: &awscdk.Environment{Account: &config.account, Region: &config.region}},
+		scope, id, &awscdk.StackProps{Env: &awscdk.Environment{Account: &config.account, Region: &config.region}},
 	)
 
 	return NewRestApi(stack, config)
