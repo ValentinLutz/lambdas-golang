@@ -80,6 +80,5 @@ func (Docker) Logs() error {
 		"compose",
 		"--file", "./docker-compose.yaml",
 		"logs",
-		"-f",
 	)
 }
