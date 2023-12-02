@@ -15,6 +15,7 @@ type Lambda mg.Namespace
 // Start starts the lambda function locally
 func (Lambda) Start() error {
 	mg.Deps(Lambda.Build)
+	mg.Deps(Cdk.Synth)
 
 	return sh.RunV(
 		"sam", "local", "start-api",

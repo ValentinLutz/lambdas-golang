@@ -21,7 +21,7 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 	}
 
 	return awslambda.NewFunction(
-		stack, jsii.String("facts-function-v1-get"), &awslambda.FunctionProps{
+		stack, NewIdWithStage(config, "facts-function-v1-get"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get"),
 				&awss3assets.AssetOptions{},
@@ -46,7 +46,7 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 	}
 
 	return awslambda.NewFunction(
-		stack, jsii.String("facts-function-v1-post"), &awslambda.FunctionProps{
+		stack, NewIdWithStage(config, "facts-function-v1-post"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-post"),
 				&awss3assets.AssetOptions{},
