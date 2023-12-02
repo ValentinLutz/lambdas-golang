@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/jsii-runtime-go"
@@ -22,7 +23,7 @@ var stageConfigs = map[string]*StageConfig{
 		},
 		lambdaConfig: LambdaConfig{
 			// use your local architecture for faster builds
-			architecture: awslambda.Architecture_X86_64(),
+			architecture: GetArchitecture(),
 		},
 	},
 	"eu-central-1-test": {
@@ -36,7 +37,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: awslambda.Architecture_ARM_64(),
+			architecture: GetArchitecture(),
 		},
 	},
 	"eu-central-1-e2e": {
@@ -50,7 +51,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: awslambda.Architecture_ARM_64(),
+			architecture: GetArchitecture(),
 		},
 	},
 	"eu-central-1-prod": {
@@ -64,7 +65,7 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "",
 		},
 		lambdaConfig: LambdaConfig{
-			architecture: awslambda.Architecture_ARM_64(),
+			architecture: GetArchitecture(),
 		},
 	},
 }
@@ -110,4 +111,15 @@ func NewStageConfig() *StageConfig {
 
 func NewIdWithStage(stage *StageConfig, id string) *string {
 	return jsii.String(id + "-" + stage.region + "-" + stage.environment)
+}
+
+func GetArchitecture() awslambda.Architecture {
+	switch runtime.GOARCH {
+	case "amd64":
+		return awslambda.Architecture_X86_64()
+	case "arm64":
+		return awslambda.Architecture_ARM_64()
+	default:
+		panic(fmt.Errorf("architecture %s not supported", runtime.GOARCH))
+	}
 }

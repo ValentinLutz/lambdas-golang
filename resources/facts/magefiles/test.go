@@ -13,7 +13,7 @@ import (
 type Test mg.Namespace
 
 func (Test) Integration() error {
-	getOrSetDefaultStage()
+	getOrSetDefaultStageEnvVars()
 
 	os.Chdir("./test-integration")
 	defer os.Chdir("..")
@@ -22,7 +22,7 @@ func (Test) Integration() error {
 }
 
 func (Test) Coverage() error {
-	getOrSetDefaultStage()
+	getOrSetDefaultStageEnvVars()
 
 	os.Chdir("./test-integration")
 	defer os.Chdir("..")

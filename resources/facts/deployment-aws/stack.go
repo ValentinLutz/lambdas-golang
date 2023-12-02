@@ -4,16 +4,12 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigateway"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3assets"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
 func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
-	dockerImageCode := awslambda.DockerImageCode_FromImageAsset(
-		jsii.String("../../../"), &awslambda.AssetImageCodeProps{
-			File: jsii.String("./resources/facts/lambda-v1-get/Dockerfile"),
-		},
-	)
 	env := map[string]*string{
 		"DB_HOST":      &config.databaseProps.host,
 		"DB_PORT":      &config.databaseProps.port,
@@ -24,22 +20,21 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
 
-	return awslambda.NewDockerImageFunction(
-		stack, NewIdWithStage(config, "facts-function-v1-get"), &awslambda.DockerImageFunctionProps{
-			Code:         dockerImageCode,
-			Environment:  &env,
+	return awslambda.NewFunction(
+		stack, jsii.String("facts-function-v1-get"), &awslambda.FunctionProps{
+			Code: awslambda.Code_FromAsset(
+				jsii.String("../lambda-v1-get"),
+				&awss3assets.AssetOptions{},
+			),
+			Runtime:      awslambda.Runtime_PROVIDED_AL2023(),
+			Handler:      jsii.String("bootstrap"),
 			Architecture: config.lambdaConfig.architecture,
+			Environment:  &env,
 		},
 	)
 }
 
 func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
-	dockerImageCode := awslambda.DockerImageCode_FromImageAsset(
-		jsii.String("../../../"), &awslambda.AssetImageCodeProps{
-			File: jsii.String("./resources/facts/lambda-v1-post/Dockerfile"),
-		},
-	)
-
 	env := map[string]*string{
 		"DB_HOST":      &config.databaseProps.host,
 		"DB_PORT":      &config.databaseProps.port,
@@ -49,11 +44,17 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 	if config.endpointUrl != nil {
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
-	return awslambda.NewDockerImageFunction(
-		stack, NewIdWithStage(config, "facts-function-v1-post"), &awslambda.DockerImageFunctionProps{
-			Code:         dockerImageCode,
-			Environment:  &env,
+
+	return awslambda.NewFunction(
+		stack, jsii.String("facts-function-v1-post"), &awslambda.FunctionProps{
+			Code: awslambda.Code_FromAsset(
+				jsii.String("../lambda-v1-post"),
+				&awss3assets.AssetOptions{},
+			),
+			Runtime:      awslambda.Runtime_PROVIDED_AL2(),
+			Handler:      jsii.String("bootstrap"),
 			Architecture: config.lambdaConfig.architecture,
+			Environment:  &env,
 		},
 	)
 }
@@ -83,7 +84,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		jsii.String("GET"),
 		awsapigateway.NewLambdaIntegration(getFunction, &awsapigateway.LambdaIntegrationOptions{}),
 		&awsapigateway.MethodOptions{
-			AuthorizationType: awsapigateway.AuthorizationType_IAM,
+			//AuthorizationType: awsapigateway.AuthorizationType_IAM,
 		},
 	)
 
@@ -92,7 +93,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		jsii.String("POST"),
 		awsapigateway.NewLambdaIntegration(postFunction, &awsapigateway.LambdaIntegrationOptions{}),
 		&awsapigateway.MethodOptions{
-			AuthorizationType: awsapigateway.AuthorizationType_IAM,
+			//AuthorizationType: awsapigateway.AuthorizationType_IAM,
 		},
 	)
 	return stack

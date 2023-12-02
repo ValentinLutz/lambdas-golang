@@ -82,6 +82,8 @@ jobs:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
       VERSION: ${{ inputs.version }}
+      GOOS: linux
+      GOARCH: arm64
     steps:
       - uses: actions/checkout@v4
 
@@ -101,6 +103,9 @@ jobs:
 
       - name: install aws-cdk
         run: npm install -g aws-cdk@2.110.0
+
+      - name: build lambdas
+        run: mage lambda:build
 
       - name: show cdk diff
         run: mage cdk:diff

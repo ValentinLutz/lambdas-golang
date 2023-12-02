@@ -5,18 +5,36 @@ import (
 	"os"
 )
 
-func getOrSetDefaultDatabaseEnvVars() {
-	getValueOrSetDefault("DB_HOST", "localhost")
-	getValueOrSetDefault("DB_PORT", "5432")
-	getValueOrSetDefault("DB_NAME", "test")
-	getValueOrSetDefault("DB_USER", "test")
-	getValueOrSetDefault("DB_PASS", "test")
+type DatabaseProps struct {
+	Host     string
+	Port     string
+	Name     string
+	User     string
+	Password string
 }
 
-func getOrSetDefaultStage() {
-	getValueOrSetDefault("REGION", "eu-central-1")
-	getValueOrSetDefault("ENVIRONMENT", "local")
-	getValueOrSetDefault("VERSION", "latest")
+func getOrSetDefaultDatabaseEnvVars() *DatabaseProps {
+	return &DatabaseProps{
+		Host:     getValueOrSetDefault("DB_HOST", "localhost"),
+		Port:     getValueOrSetDefault("DB_PORT", "5432"),
+		Name:     getValueOrSetDefault("DB_NAME", "test"),
+		User:     getValueOrSetDefault("DB_USER", "test"),
+		Password: getValueOrSetDefault("DB_PASS", "test"),
+	}
+}
+
+type StageProps struct {
+	Environment string
+	Region      string
+	Version     string
+}
+
+func getOrSetDefaultStageEnvVars() *StageProps {
+	return &StageProps{
+		Environment: getValueOrSetDefault("ENVIRONMENT", "local"),
+		Region:      getValueOrSetDefault("REGION", "eu-central-1"),
+		Version:     getValueOrSetDefault("VERSION", "latest"),
+	}
 }
 
 func getValueOrSetDefault(key string, defaultValue string) string {

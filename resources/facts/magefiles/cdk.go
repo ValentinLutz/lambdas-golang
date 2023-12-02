@@ -14,7 +14,9 @@ type Cdk mg.Namespace
 
 // Synth synthesizes the CDK stack
 func (Cdk) Synth() error {
-	getOrSetDefaultStage()
+	mg.Deps(Clean)
+
+	getOrSetDefaultStageEnvVars()
 
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
@@ -27,6 +29,8 @@ func (Cdk) Synth() error {
 
 // Diff diffs the CDK stack
 func (Cdk) Diff() error {
+	getOrSetDefaultStageEnvVars()
+
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
 
@@ -38,6 +42,8 @@ func (Cdk) Diff() error {
 
 // Deploy deploys the CDK stack
 func (Cdk) Deploy() error {
+	getOrSetDefaultStageEnvVars()
+
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
 
@@ -49,6 +55,8 @@ func (Cdk) Deploy() error {
 
 // Destroy destroys the CDK stack
 func (Cdk) Destroy() error {
+	getOrSetDefaultStageEnvVars()
+
 	os.Chdir("./deployment-aws")
 	defer os.Chdir("..")
 

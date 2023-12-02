@@ -1,6 +1,8 @@
 package main
 
-import "os"
+import (
+	"os"
+)
 
 // Clean cleans generated files
 func Clean() error {
