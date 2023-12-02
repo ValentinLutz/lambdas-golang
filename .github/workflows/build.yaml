@@ -61,6 +61,7 @@ jobs:
         run: mage test:integration
 
       - name: stop test dependencies
+        if: always()
         run: mage docker:down
 
   deploy:

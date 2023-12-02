@@ -12,20 +12,20 @@ import (
 
 type Test mg.Namespace
 
-func (Test) Integration() {
+func (Test) Integration() error {
 	getOrSetDefaultStage()
 
 	os.Chdir("./test-integration")
 	defer os.Chdir("..")
 
-	sh.RunV("go", "test", "-cover", "-coverpkg=../...", "-coverprofile=coverage.out", "-count=1", "-p=1", "./...")
+	return sh.RunV("go", "test", "-cover", "-coverpkg=../...", "-coverprofile=coverage.out", "-count=1", "-p=1", "./...")
 }
 
-func (Test) Coverage() {
+func (Test) Coverage() error {
 	getOrSetDefaultStage()
 
 	os.Chdir("./test-integration")
 	defer os.Chdir("..")
 
-	sh.RunV("go", "tool", "cover", "-html", "coverage.out", "-o", "coverage.html")
+	return sh.RunV("go", "tool", "cover", "-html", "coverage.out", "-o", "coverage.html")
 }
