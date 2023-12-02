@@ -60,6 +60,10 @@ jobs:
       - name: run integration tests
         run: mage test:integration
 
+      - name: output test dependencies logs
+        if: failure()
+        run: mage docker:logs
+
       - name: stop test dependencies
         if: always()
         run: mage docker:down
