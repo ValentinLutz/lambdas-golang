@@ -26,8 +26,6 @@ func (Lambda) Start() error {
 
 // Build builds all lambda functions
 func (Lambda) Build() error {
-	mg.Deps(Cdk.Synth)
-
 	lambdas := []string{
 		"./lambda-v1-get",
 		"./lambda-v1-post",
