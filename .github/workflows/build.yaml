@@ -82,6 +82,7 @@ jobs:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
       VERSION: ${{ inputs.version }}
+      FORCE_COLOR: 1
     steps:
       - uses: actions/checkout@v4
 
