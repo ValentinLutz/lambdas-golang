@@ -101,7 +101,7 @@ jobs:
           node-version: 20.10.0
 
       - name: install aws-cdk
-        run: npm install -g aws-cdk@2.110.0
+        run: npm install -g aws-cdk@2.113.0
 
       - name: build lambdas
         run: mage lambda:build

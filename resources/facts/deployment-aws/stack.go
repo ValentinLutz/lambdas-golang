@@ -84,7 +84,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		jsii.String("GET"),
 		awsapigateway.NewLambdaIntegration(getFunction, &awsapigateway.LambdaIntegrationOptions{}),
 		&awsapigateway.MethodOptions{
-			//AuthorizationType: awsapigateway.AuthorizationType_IAM,
+			AuthorizationType: awsapigateway.AuthorizationType_IAM,
 		},
 	)
 
@@ -93,7 +93,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		jsii.String("POST"),
 		awsapigateway.NewLambdaIntegration(postFunction, &awsapigateway.LambdaIntegrationOptions{}),
 		&awsapigateway.MethodOptions{
-			//AuthorizationType: awsapigateway.AuthorizationType_IAM,
+			AuthorizationType: awsapigateway.AuthorizationType_IAM,
 		},
 	)
 	return stack
