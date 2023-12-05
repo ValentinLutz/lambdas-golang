@@ -30,6 +30,7 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 			Handler:      jsii.String("bootstrap"),
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
+			Tracing:      awslambda.Tracing_ACTIVE,
 		},
 	)
 }
@@ -55,6 +56,7 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 			Handler:      jsii.String("bootstrap"),
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
+			Tracing:      awslambda.Tracing_ACTIVE,
 		},
 	)
 }
