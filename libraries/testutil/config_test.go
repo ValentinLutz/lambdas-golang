@@ -9,7 +9,7 @@ import (
 
 func Test_ParseFile(t *testing.T) {
 	// given
-	path := "resources/test_config.yaml"
+	path := "services/test_config.yaml"
 
 	// when
 	config, err := testutil.ParseFile[testutil.Config](path)
@@ -43,7 +43,7 @@ func Test_ParseFile_FileNotFound(t *testing.T) {
 
 func Test_ParseFile_UnmarshalFailed(t *testing.T) {
 	// given
-	path := "resources/unknown_format.text"
+	path := "services/unknown_format.text"
 
 	// when
 	_, err := testutil.ParseFile[testutil.Config](path)

@@ -18,11 +18,11 @@ jobs:
             echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
           fi
 
-  facts:
+  build:
     uses: ./.github/workflows/build.yaml
     strategy:
       matrix:
-        project-path: [ resources/facts ]
+        project-path: [ services/order ]
     needs:
       - create-version
     secrets: inherit
