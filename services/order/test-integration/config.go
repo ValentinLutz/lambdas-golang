@@ -11,11 +11,11 @@ var (
 	orderV1GetHandler  *getv1.Handler
 )
 
-func init() {
-	NewTestConfig()
-	orderV1GetHandler = getv1.NewHandler()
-	orderV1PostHandler = postv1.NewHandler()
-}
+//func init() {
+//	NewTestConfig()
+//	orderV1GetHandler = getv1.NewHandler()
+//	orderV1PostHandler = postv1.NewHandler()
+//}
 
 func NewTestConfig() {
 	envVars := map[string]string{
