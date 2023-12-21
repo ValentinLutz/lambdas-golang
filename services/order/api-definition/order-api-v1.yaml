@@ -73,6 +73,7 @@ paths:
       x-amazon-apigateway-integration:
         uri: arn:aws:apigateway:{{ .Region }}:lambda:path/2015-03-31/functions/arn:aws:lambda:{{ .PostOrderFunctionArn }}/invocations/invocations
         type: aws_proxy
+        httpMethod: POST
   /v1/orders/{order_id}:
     get:
       operationId: get_order
@@ -172,7 +173,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/order_item_response"
+            $ref: "#/components/schemas/OrderItemResponse"
     OrderStatus:
       type: string
       enum:
@@ -184,7 +185,7 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/OrderResponse"
-    order_item_response:
+    OrderItemResponse:
       type: object
       required:
         - name
