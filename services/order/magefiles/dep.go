@@ -17,5 +17,9 @@ func (Dep) Install() error {
 
 // Generate generates the models from the open api specification
 func (Dep) Generate() error {
+	err := sh.RunV("mkdir", "-p", "./lambda-shared/incoming")
+	if err != nil {
+		return err
+	}
 	return sh.RunV("oapi-codegen", "--config", "./api-definition/oapi-codgen.yaml", "./api-definition/order-api-v1.yaml")
 }
