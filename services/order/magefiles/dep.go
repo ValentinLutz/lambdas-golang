@@ -10,7 +10,12 @@ import (
 
 type Dep mg.Namespace
 
-// Generate generates the models from the OpenAPI specification
+// Install installs the dependencies to generate the api models
+func (Dep) Install() error {
+	return sh.RunV("go", "install", "github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0")
+}
+
+// Generate generates the models from the open api specification
 func (Dep) Generate() error {
 	return sh.RunV("oapi-codegen", "--config", "./api-definition/oapi-codgen.yaml", "./api-definition/order-api-v1.yaml")
 }

@@ -54,6 +54,12 @@ jobs:
         with:
           install-only: true
 
+      - name: install dependencies
+        run: mage dep:install
+
+      - name: generate dependencies
+        run: mage dep:generate
+
       - name: start test dependencies
         run: mage docker:up
 
@@ -102,6 +108,12 @@ jobs:
 
       - name: install aws-cdk
         run: npm install -g aws-cdk@2.113.0
+
+      - name: install dependencies
+        run: mage dep:install
+
+      - name: generate dependencies
+        run: mage dep:generate
 
       - name: build lambdas
         run: mage lambda:build
