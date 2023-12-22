@@ -38,8 +38,10 @@ jobs:
               - 'libraries/**'
               - '${{ inputs.project-path }}/**'
 
-  files-changed-gate:
+  changes-gate:
     runs-on: ubuntu-latest
+    needs:
+      - changes
     if: ${{ needs.changes.outputs.files-changed == 'true' }}
     steps:
       - name: File changes detected
@@ -48,7 +50,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs:
-      - files-changed-gate
+      - changes-gate
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
@@ -88,7 +90,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - files-changed-gate
+      - changes-gate
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
