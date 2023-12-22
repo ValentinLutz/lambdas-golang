@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigateway"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3assets"
 	"github.com/aws/constructs-go/constructs/v10"
@@ -28,7 +29,13 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 		stack, NewIdWithStage(config, "order-function-v1-get"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get"),
-				&awss3assets.AssetOptions{},
+				&awss3assets.AssetOptions{
+					IgnoreMode: awscdk.IgnoreMode_GIT,
+					Exclude: &[]*string{
+						jsii.String("**"),
+						jsii.String("!bootstrap"),
+					},
+				},
 			),
 			Runtime:      awslambda.Runtime_PROVIDED_AL2023(),
 			Handler:      jsii.String("bootstrap"),
@@ -55,9 +62,15 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 		stack, NewIdWithStage(config, "order-function-v1-post"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-post"),
-				&awss3assets.AssetOptions{},
+				&awss3assets.AssetOptions{
+					IgnoreMode: awscdk.IgnoreMode_GIT,
+					Exclude: &[]*string{
+						jsii.String("**"),
+						jsii.String("!bootstrap"),
+					},
+				},
 			),
-			Runtime:      awslambda.Runtime_PROVIDED_AL2(),
+			Runtime:      awslambda.Runtime_PROVIDED_AL2023(),
 			Handler:      jsii.String("bootstrap"),
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
@@ -67,7 +80,7 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 }
 
 func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
-	//getFunction := NewGetFunction(stack, config)
+	getFunction := NewGetFunction(stack, config)
 	postFunction := NewPostFunction(stack, config)
 
 	openApiSpecs, err := template.ParseFiles("../api-definition/order-api-v1.yaml")
@@ -78,8 +91,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 	var orderApiV1 bytes.Buffer
 	err = openApiSpecs.Execute(
 		&orderApiV1, map[string]string{
-			"Region":               config.region,
-			"Account":              config.account,
+			"GetOrderFunctionArn":  *getFunction.FunctionArn(),
 			"PostOrderFunctionArn": *postFunction.FunctionArn(),
 		},
 	)
@@ -93,49 +105,31 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		panic(err)
 	}
 
-	awsapigateway.NewSpecRestApi(
-		stack, NewIdWithStage(config, "order-spec-rest-api"), &awsapigateway.SpecRestApiProps{
+	restApi := awsapigateway.NewSpecRestApi(
+		stack, NewIdWithStage(config, "order-rest-api"), &awsapigateway.SpecRestApiProps{
 			EndpointTypes: &[]awsapigateway.EndpointType{
 				awsapigateway.EndpointType_PRIVATE,
 			},
 			ApiDefinition: awsapigateway.ApiDefinition_FromInline(orderApiV1Spec),
+			DeployOptions: &awsapigateway.StageOptions{
+				StageName: jsii.String(config.environment),
+			},
 		},
 	)
 
-	//lambdaRestApi := awsapigateway.NewLambdaRestApi(
-	//	stack, NewIdWithStage(config, "order-rest-api"), &awsapigateway.LambdaRestApiProps{
-	//		Proxy:   jsii.Bool(false),
-	//		Handler: getFunction,
-	//		DeployOptions: &awsapigateway.StageOptions{
-	//			StageName: jsii.String(config.environment),
-	//		},
-	//	},
-	//)
-	//
-	//v1 := lambdaRestApi.Root().AddResource(
-	//	jsii.String("v1"), &awsapigateway.ResourceOptions{},
-	//)
-	//
-	//orderResourceV1 := v1.AddResource(
-	//	jsii.String("order"), &awsapigateway.ResourceOptions{},
-	//)
-	//
-	//orderResourceV1.AddMethod(
-	//	jsii.String("GET"),
-	//	awsapigateway.NewLambdaIntegration(getFunction, &awsapigateway.LambdaIntegrationOptions{}),
-	//	&awsapigateway.MethodOptions{
-	//		AuthorizationType: awsapigateway.AuthorizationType_IAM,
-	//	},
-	//)
-	//
-	//postFunction := NewPostFunction(stack, config)
-	//orderResourceV1.AddMethod(
-	//	jsii.String("POST"),
-	//	awsapigateway.NewLambdaIntegration(postFunction, &awsapigateway.LambdaIntegrationOptions{}),
-	//	&awsapigateway.MethodOptions{
-	//		AuthorizationType: awsapigateway.AuthorizationType_IAM,
-	//	},
-	//)
+	getFunction.AddPermission(
+		jsii.String("AllowApiGatewayInvoke"), &awslambda.Permission{
+			Principal: awsiam.NewServicePrincipal(jsii.String("apigateway.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+			SourceArn: restApi.ArnForExecuteApi(jsii.String("GET"), jsii.String("/v1/orders"), nil),
+		},
+	)
+	postFunction.AddPermission(
+		jsii.String("AllowApiGatewayInvoke"), &awslambda.Permission{
+			Principal: awsiam.NewServicePrincipal(jsii.String("apigateway.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+			SourceArn: restApi.ArnForExecuteApi(jsii.String("POST"), jsii.String("/v1/orders"), nil),
+		},
+	)
+
 	return stack
 }
 

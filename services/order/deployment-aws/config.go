@@ -22,7 +22,6 @@ var stageConfigs = map[string]*StageConfig{
 			secret: "database-secret",
 		},
 		lambdaConfig: LambdaConfig{
-			// use your local architecture for faster builds
 			architecture: GetArchitecture(),
 			orderRegion:  "NONE",
 		},

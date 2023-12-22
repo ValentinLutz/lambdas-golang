@@ -1,42 +1,45 @@
-openapi: "3.0.3"
+openapi: "3.0.1"
 info:
-  version: 1.0.0
-  title: Order API
+  version: "1.0.0"
+  title: "Order API"
 servers:
-  - url: https://api.example.com
+  - url: "https://XXX.execute-api.eu-central-1.amazonaws.com/{basePath}"
+    variables:
+      basePath:
+        default: "test"
 paths:
   /v1/orders:
     get:
-      operationId: get_orders
-      summary: Get all orders
+      operationId: "get_orders"
+      summary: "Get all orders"
       security:
         - sigv4: [ ]
       parameters:
-        - name: customer_id
-          in: query
+        - name: "customer_id"
+          in: "query"
           required: false
-          description: The customer id determines the customer of orders returned
+          description: "The customer id determines the customer of orders returned"
           schema:
-            type: string
-            format: uuid
-            example: 6af7fd58-c92e-4b26-9eb7-1942f6ea9aee
-        - name: limit
-          in: query
+            type: "string"
+            format: "uuid"
+            example: "6af7fd58-c92e-4b26-9eb7-1942f6ea9aee"
+        - name: "limit"
+          in: "query"
           required: false
-          description: The limit determines the number of orders returned
+          description: "The limit determines the number of orders returned"
           schema:
-            type: integer
-            default: 50
-        - name: offset
-          in: query
+            type: "integer"
+            default: "50"
+        - name: "offset"
+          in: "query"
           required: false
-          description: The offset determines the skipped orders
+          description: "The offset determines the skipped orders"
           schema:
-            type: integer
-            default: 0
+            type: "integer"
+            default: "0"
       responses:
         "200":
-          description: An array of orders
+          description: "An array of orders"
           content:
             application/json:
               schema:
@@ -47,11 +50,14 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "500":
           $ref: "#/components/responses/UnexpectedError"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrderFunctionArn }}/invocations"
+        type: "aws_proxy"
+        passthroughBehavior: "when_no_match"
     post:
-      operationId: post_orders
-      summary: Place a new order
-      security:
-        - sigv4: [ ]
+      operationId: "post_orders"
+      summary: "Place a new order"
       requestBody:
         content:
           application/json:
@@ -59,7 +65,7 @@ paths:
               $ref: "#/components/schemas/OrderRequest"
       responses:
         "201":
-          description: Order created
+          description: "Order created"
           content:
             application/json:
               schema:
@@ -71,152 +77,153 @@ paths:
         "500":
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
-        uri: arn:aws:apigateway:{{ .Region }}:lambda:path/2015-03-31/functions/arn:aws:lambda:{{ .PostOrderFunctionArn }}/invocations/invocations
-        type: aws_proxy
-        httpMethod: POST
-  /v1/orders/{order_id}:
-    get:
-      operationId: get_order
-      summary: Get information about a specific order
-      parameters:
-        - name: order_id
-          in: path
-          required: true
-          description: The id of the order to retrieve
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Information about a single order
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderResponse"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          description: Order not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/UnexpectedError"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .PostOrderFunctionArn }}/invocations"
+        type: "aws_proxy"
+        passthroughBehavior: "when_no_match"
+#  /v1/orders/{order_id}:
+#    get:
+#      operationId: "get_order"
+#      summary: "Get information about a specific order"
+#      parameters:
+#        - name: "order_id"
+#          in: "path"
+#          required: true
+#          description: "The id of the order to retrieve"
+#          schema:
+#            type: "string"
+#      responses:
+#        "200":
+#          description: "Information about a single order"
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/OrderResponse"
+#        "400":
+#          $ref: "#/components/responses/BadRequestError"
+#        "401":
+#          $ref: "#/components/responses/UnauthorizedError"
+#        "404":
+#          description: "Order not found"
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ErrorResponse"
+#        "500":
+#          $ref: "#/components/responses/UnexpectedError"
 components:
   responses:
     BadRequestError:
-      description: Bad Request Error
+      description: "Bad Request Error"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
     UnauthorizedError:
-      description: Unauthorized Error
+      description: "Unauthorized Error"
     UnexpectedError:
-      description: Unexpected Error
+      description: "Unexpected Error"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
   securitySchemes:
     sigv4:
-      type: apiKey
-      name: Authorization
-      in: header
-      x-amazon-apigateway-authtype: awsSigv4
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "awsSigv4"
   schemas:
     OrderRequest:
-      type: object
+      type: "object"
       required:
-        - customer_id
-        - items
+        - "customer_id"
+        - "items"
       properties:
         customer_id:
-          type: string
-          format: uuid
-          example: 6af7fd58-c92e-4b26-9eb7-1942f6ea9aee
+          type: "string"
+          format: "uuid"
+          example: "6af7fd58-c92e-4b26-9eb7-1942f6ea9aee"
         items:
-          type: array
+          type: "array"
           items:
             $ref: "#/components/schemas/OrderItemRequest"
     OrderItemRequest:
-      type: object
+      type: "object"
       required:
-        - name
+        - "name"
       properties:
         name:
-          type: string
-          example: marshmallow
+          type: "string"
+          example: "marshmallow"
     OrderResponse:
-      type: object
+      type: "object"
       required:
-        - customer_id
-        - order_id
-        - creation_date
-        - status
-        - items
+        - "customer_id"
+        - "order_id"
+        - "creation_date"
+        - "status"
+        - "items"
       properties:
         customer_id:
-          type: string
-          format: uuid
-          example: f8f3d5ce-3fc1-4d9d-9306-f5165b9279cc
+          type: "string"
+          format: "uuid"
+          example: "f8f3d5ce-3fc1-4d9d-9306-f5165b9279cc"
         order_id:
-          type: string
-          example: I3xXiIqbP92-NONE-Ui*8i0kFHcA
+          type: "string"
+          example: "I3xXiIqbP92-NONE-Ui*8i0kFHcA"
         creation_date:
-          type: string
-          format: date-time
+          type: "string"
+          format: "date-time"
         status:
           $ref: "#/components/schemas/OrderStatus"
         items:
-          type: array
+          type: "array"
           items:
             $ref: "#/components/schemas/OrderItemResponse"
     OrderStatus:
-      type: string
+      type: "string"
       enum:
-        - order_completed
-        - order_canceled
-        - order_in_progress
-        - order_placed
+        - "order_completed"
+        - "order_canceled"
+        - "order_in_progress"
+        - "order_placed"
     OrdersResponse:
-      type: array
+      type: "array"
       items:
         $ref: "#/components/schemas/OrderResponse"
     OrderItemResponse:
-      type: object
+      type: "object"
       required:
-        - name
+        - "name"
       properties:
         name:
-          type: string
-          example: banana
+          type: "string"
+          example: "banana"
     ErrorResponse:
-      type: object
+      type: "object"
       required:
-        - method
-        - path
-        - timestamp
-        - code
-        - correlation_id
+        - "method"
+        - "path"
+        - "timestamp"
+        - "code"
+        - "correlation_id"
       properties:
         method:
-          type: string
-          example: GET
+          type: "string"
+          example: "GET"
         path:
-          type: string
-          example: /orders
+          type: "string"
+          example: "/orders"
         timestamp:
-          type: string
-          format: date-time
+          type: "string"
+          format: "date-time"
         code:
-          type: integer
-          example: 9009
+          type: "integer"
+          example: "9009"
         message:
-          type: string
-          example: panic it's over 9000!
+          type: "string"
+          example: "panic it's over 9000!"
         correlation_id:
-          type: string
-          example: 864f8731-9bbf-46e3-b84e-fda43a910fe4
+          type: "string"
+          example: "864f8731-9bbf-46e3-b84e-fda43a910fe4"

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 )
 
 type DatabaseProps struct {
@@ -23,17 +24,35 @@ func getOrSetDefaultDatabaseEnvVars() *DatabaseProps {
 	}
 }
 
+type BuildProps struct {
+	OperatingSystem string
+	Architecture    string
+}
+
+func getOrSetDefaultBuildEnvVars() *BuildProps {
+	stageEnvVars := getOrSetDefaultStageEnvVars()
+
+	if stageEnvVars.Environment == "local" {
+		return &BuildProps{
+			OperatingSystem: getValueOrSetDefault("GOOS", runtime.GOOS),
+			Architecture:    getValueOrSetDefault("GOARCH", runtime.GOARCH),
+		}
+	}
+	return &BuildProps{
+		OperatingSystem: getValueOrSetDefault("GOOS", "linux"),
+		Architecture:    getValueOrSetDefault("GOARCH", "arm64"),
+	}
+}
+
 type StageProps struct {
 	Environment string
 	Region      string
-	Version     string
 }
 
 func getOrSetDefaultStageEnvVars() *StageProps {
 	return &StageProps{
 		Environment: getValueOrSetDefault("ENVIRONMENT", "local"),
 		Region:      getValueOrSetDefault("REGION", "eu-central-1"),
-		Version:     getValueOrSetDefault("VERSION", "latest"),
 	}
 }
 

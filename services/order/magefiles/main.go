@@ -6,13 +6,19 @@ import (
 
 // Clean cleans generated files
 func Clean() error {
-	err := os.RemoveAll("./deployment-aws/cdk.out")
-	if err != nil {
-		return err
+	paths := []string{
+		"./deployment-aws/cdk.out",
+		"./.aws-sam",
+		"./lambda-shared/incoming/model.gen.go",
+		"./lambda-v1-post/bootstrap",
+		"./lambda-v1-get/bootstrap",
 	}
-	err = os.RemoveAll("./.aws-sam")
-	if err != nil {
-		return err
+
+	for _, path := range paths {
+		err := os.RemoveAll(path)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

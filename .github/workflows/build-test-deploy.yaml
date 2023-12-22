@@ -1,3 +1,5 @@
+name: Build, test and deploy
+
 on:
   workflow_call:
     inputs:
@@ -10,9 +12,11 @@ on:
       environment:
         required: true
         type: string
-      version:
-        required: true
-        type: string
+
+env:
+  GO_VERSION: 1.21.4
+  NODE_VERSION: 20.10.0
+  CDK_VERSION: 2.113.0
 
 jobs:
   changes:
@@ -33,11 +37,14 @@ jobs:
               - 'libraries/**'
               - '${{ inputs.project-path }}/**'
 
+  changes-gate:
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.files-changed == 'true' }}
+
   test:
     runs-on: ubuntu-latest
     needs:
-      - changes
-    if: ${{ needs.changes.outputs.files-changed == 'true' }}
+      - changes-gate
     defaults:
       run:
         working-directory: ${{ inputs.project-path }}
@@ -46,7 +53,7 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: '1.21.4'
+          go-version: ${{ env.GO_VERSION }}
           cache: true
           cache-dependency-path: ./go.sum
 
@@ -77,8 +84,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - changes
-      - test
+      - changes-gate
     if: ${{ needs.changes.outputs.files-changed == 'true' }}
     defaults:
       run:
@@ -87,14 +93,13 @@ jobs:
     env:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
-      VERSION: ${{ inputs.version }}
       FORCE_COLOR: 1
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v3
         with:
-          go-version: '1.21.4'
+          go-version: ${{ env.GO_VERSION }}
           cache: true
           cache-dependency-path: ./go.sum
 
@@ -104,10 +109,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.10.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: install aws-cdk
-        run: npm install -g aws-cdk@2.113.0
+        run: npm install -g aws-cdk@${{ env.CDK_VERSION }}
 
       - name: install dependencies
         run: mage dep:install
@@ -117,9 +122,6 @@ jobs:
 
       - name: build lambdas
         run: mage lambda:build
-        env:
-          GOOS: linux
-          GOARCH: arm64
 
       - name: show cdk synth
         run: mage cdk:synth
