@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"root/services/order/lambda-shared/incoming"
-	"root/services/order/lambda-v1-post/outgoing"
+	"root/services/order/lambda-v1-post-orders/outgoing"
 	"time"
 )
 
@@ -34,6 +34,7 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 		orderItems = append(
 			orderItems, outgoing.OrderItemEntity{
 				OrderItemId:  0,
+				OrderId:      string(orderId),
 				ItemName:     item.Name,
 				CreationDate: creationDate,
 			},

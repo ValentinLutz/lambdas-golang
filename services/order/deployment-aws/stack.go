@@ -26,9 +26,9 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 	}
 
 	return awslambda.NewFunction(
-		stack, NewIdWithStage(config, "order-function-v1-get"), &awslambda.FunctionProps{
+		stack, NewIdWithStage(config, "function-v1-get-orders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
-				jsii.String("../lambda-v1-get"),
+				jsii.String("../lambda-v1-get-orders"),
 				&awss3assets.AssetOptions{
 					IgnoreMode: awscdk.IgnoreMode_GIT,
 					Exclude: &[]*string{
@@ -59,9 +59,9 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 	}
 
 	return awslambda.NewFunction(
-		stack, NewIdWithStage(config, "order-function-v1-post"), &awslambda.FunctionProps{
+		stack, NewIdWithStage(config, "function-v1-post-orders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
-				jsii.String("../lambda-v1-post"),
+				jsii.String("../lambda-v1-post-orders"),
 				&awss3assets.AssetOptions{
 					IgnoreMode: awscdk.IgnoreMode_GIT,
 					Exclude: &[]*string{

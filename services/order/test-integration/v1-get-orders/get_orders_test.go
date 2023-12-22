@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func Test_orderResource_Get(t *testing.T) {
+func Test_Get_Orders(t *testing.T) {
 	//t.Run(
 	//	"get a random fact when no fact exists", func(t *testing.T) {
 	//		// given

@@ -2,6 +2,7 @@ package incoming
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"root/libraries/apputil"
@@ -15,34 +16,30 @@ type Handler struct {
 	Database *sqlx.DB
 }
 
-func NewHandler() *Handler {
+func NewHandler() (*Handler, error) {
 	apputil.NewSlogDefault(slog.LevelInfo)
 
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to load aws default config: %w", err)
 	}
 	secret, err := apputil.GetSecret(cfg, os.Getenv("DB_SECRET_ID"))
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to get database secret: %w", err)
 	}
 
 	dbConfig, err := apputil.NewDatabaseConfig(secret)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to create database config: %w", err)
 	}
 	database, err := apputil.NewDatabase(dbConfig)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to create database: %w", err)
 	}
 
 	return &Handler{
 		Database: database,
-	}
-}
-
-type FactResponse struct {
-	Text string `json:"text"`
+	}, nil
 }
 
 func (handler *Handler) Invoke(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

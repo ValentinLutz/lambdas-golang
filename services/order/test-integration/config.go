@@ -1,21 +1,38 @@
-package test_integration
+package testintegration
 
 import (
 	"os"
-	getv1 "root/services/order/lambda-v1-get/incoming"
-	postv1 "root/services/order/lambda-v1-post/incoming"
+	v1GetOrders "root/services/order/lambda-v1-get-orders/incoming"
+	v1PostOrders "root/services/order/lambda-v1-post-orders/incoming"
 )
 
 var (
-	orderV1PostHandler *postv1.Handler
-	orderV1GetHandler  *getv1.Handler
+	V1GetOrdersHandler  *v1GetOrders.Handler
+	V1PostOrdersHandler *v1PostOrders.Handler
 )
 
-//func init() {
-//	NewTestConfig()
-//	orderV1GetHandler = getv1.NewHandler()
-//	orderV1PostHandler = postv1.NewHandler()
-//}
+func init() {
+	NewTestConfig()
+
+	V1GetOrdersHandler = NewV1GetOrdersHandler()
+	V1PostOrdersHandler = NewV1PostOrdersHandler()
+}
+
+func NewV1GetOrdersHandler() *v1GetOrders.Handler {
+	handler, err := v1GetOrders.NewHandler()
+	if err != nil {
+		panic(err)
+	}
+	return handler
+}
+
+func NewV1PostOrdersHandler() *v1PostOrders.Handler {
+	handler, err := v1PostOrders.NewHandler()
+	if err != nil {
+		panic(err)
+	}
+	return handler
+}
 
 func NewTestConfig() {
 	envVars := map[string]string{
@@ -28,6 +45,7 @@ func NewTestConfig() {
 		"DB_PORT":               "5432",
 		"DB_NAME":               "test",
 		"DB_SECRET_ID":          "database-secret",
+		"ORDER_REGION":          "EU",
 	}
 
 	for key, value := range envVars {

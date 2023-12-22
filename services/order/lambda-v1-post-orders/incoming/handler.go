@@ -8,8 +8,8 @@ import (
 	"os"
 	"root/libraries/apputil"
 	"root/services/order/lambda-shared/incoming"
-	"root/services/order/lambda-v1-post/core"
-	"root/services/order/lambda-v1-post/outgoing"
+	"root/services/order/lambda-v1-post-orders/core"
+	"root/services/order/lambda-v1-post-orders/outgoing"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/config"

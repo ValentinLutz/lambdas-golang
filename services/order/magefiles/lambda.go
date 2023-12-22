@@ -32,8 +32,8 @@ func (Lambda) Build() error {
 	getOrSetDefaultBuildEnvVars()
 
 	lambdas := []string{
-		"./lambda-v1-get",
-		"./lambda-v1-post",
+		"./lambda-v1-get-orders",
+		"./lambda-v1-post-orders",
 	}
 
 	for _, lambda := range lambdas {

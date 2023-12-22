@@ -2,10 +2,10 @@ package core_test
 
 import (
 	"regexp"
-	"root/services/order/lambda-v1-post/core"
+	"root/services/order/lambda-v1-post-orders/core"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/maxatome/go-testdeep/td"
 )
 
 func Benchmark_NewOrderId(b *testing.B) {
@@ -37,6 +37,6 @@ func testNewOrderId(region core.Region, regex *regexp.Regexp) func(t *testing.T)
 		// when
 		orderId := core.NewOrderId(region)
 		// then
-		assert.Regexp(t, regex, orderId)
+		td.Re(t, orderId, regex)
 	}
 }
