@@ -1,0 +1,52 @@
+name: Test service
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        required: true
+        type: string
+
+      project-path:
+        required: true
+        type: string
+
+defaults:
+  run:
+    working-directory: ${{ inputs.project-path }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+          cache-dependency-path: ./go.sum
+
+      - uses: magefile/mage-action@v3
+        with:
+          install-only: true
+
+      - name: install dependencies
+        run: mage dep:install
+
+      - name: generate dependencies
+        run: mage dep:generate
+
+      - name: start test dependencies
+        run: mage docker:up
+
+      - name: run integration tests
+        run: mage test:integration
+
+      - name: output test dependencies logs
+        if: failure()
+        run: mage docker:logs
+
+      - name: stop test dependencies
+        if: always()
+        run: mage docker:down

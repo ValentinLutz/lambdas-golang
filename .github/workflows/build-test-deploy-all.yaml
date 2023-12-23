@@ -3,13 +3,17 @@ name: Build, test and deploy all services
 on: [ push ]
 
 jobs:
-  build:
+  build-test-deploy:
     uses: ./.github/workflows/build-test-deploy.yaml
     strategy:
       matrix:
         project-path: [ services/order ]
     secrets: inherit
     with:
+      go-version: 1.21.5
+      node-version: 20.10.0
+      cdk-version: 2.116.1
+
       project-path: ${{ matrix.project-path }}
       region: eu-central-1
       environment: test
