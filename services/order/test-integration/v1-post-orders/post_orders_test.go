@@ -33,9 +33,8 @@ func Test_Post_Orders(t *testing.T) {
 			err = json.Unmarshal([]byte(resp.Body), &respBody)
 			td.CmpNoError(t, err)
 
-			expectedResponse := testutil.ReadFile(t, "./post_orders_response.json")
 			td.CmpJSON(
-				t, respBody, expectedResponse, []any{
+				t, respBody, "./post_orders_response.json", []any{
 					td.Re("^[A-Za-z0-9]{13}-[A-Z]{2,4}-[A-Za-z0-9]{13}$"),
 					td.NotEmpty(),
 				},

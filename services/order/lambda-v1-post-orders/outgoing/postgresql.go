@@ -3,6 +3,7 @@ package outgoing
 import (
 	"context"
 	"errors"
+	"root/services/order/lambda-shared/outgoing"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -15,7 +16,11 @@ func NewOrderRepository(database *sqlx.DB) *OrderRepository {
 	return &OrderRepository{DB: database}
 }
 
-func (orderRepository *OrderRepository) SaveOrder(ctx context.Context, orderEntity OrderEntity, orderItemEntities []OrderItemEntity) error {
+func (orderRepository *OrderRepository) SaveOrder(
+	ctx context.Context,
+	orderEntity outgoing.OrderEntity,
+	orderItemEntities []outgoing.OrderItemEntity,
+) error {
 	return orderRepository.execTx(
 		ctx, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(

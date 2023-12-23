@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"root/services/order/lambda-shared/incoming"
+	shared "root/services/order/lambda-shared/outgoing"
 	"root/services/order/lambda-v1-post-orders/outgoing"
 	"time"
 )
@@ -29,10 +30,10 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 		service.region,
 	)
 
-	var orderItems []outgoing.OrderItemEntity
+	var orderItems []shared.OrderItemEntity
 	for _, item := range orderRequest.Items {
 		orderItems = append(
-			orderItems, outgoing.OrderItemEntity{
+			orderItems, shared.OrderItemEntity{
 				OrderItemId:  0,
 				OrderId:      string(orderId),
 				ItemName:     item.Name,
@@ -41,7 +42,7 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 		)
 	}
 
-	order := outgoing.OrderEntity{
+	order := shared.OrderEntity{
 		OrderId:       string(orderId),
 		CustomerId:    orderRequest.CustomerId,
 		OrderWorkflow: "default_workflow",

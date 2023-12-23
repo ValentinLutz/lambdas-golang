@@ -2,18 +2,24 @@ package incoming
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"os"
 	"root/libraries/apputil"
+	"root/services/order/lambda-v1-get-orders/core"
+	"root/services/order/lambda-v1-get-orders/outgoing"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
 type Handler struct {
-	Database *sqlx.DB
+	Database     *sqlx.DB
+	OrderService *core.OrderService
 }
 
 func NewHandler() (*Handler, error) {
@@ -37,48 +43,69 @@ func NewHandler() (*Handler, error) {
 		return nil, fmt.Errorf("failed to create database: %w", err)
 	}
 
+	orderRepository := outgoing.NewOrderRepository(database)
+	orderService := core.NewOrderService(orderRepository)
+
 	return &Handler{
-		Database: database,
+		Database:     database,
+		OrderService: orderService,
 	}, nil
 }
 
-func (handler *Handler) Invoke(ctx context.Context, _ events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	//var factEntities []shared.FactEntity
-	//err := handler.Database.SelectContext(ctx, &factEntities, "SELECT fact_id, fact_text FROM order_resource.fact")
-	//if err != nil {
-	//	slog.Error(
-	//		"failed to select order",
-	//		slog.Any("err", err),
-	//	)
-	//	return events.APIGatewayProxyResponse{
-	//		StatusCode: 500,
-	//	}, nil
-	//}
-	//
-	//if len(factEntities) == 0 {
-	//	return events.APIGatewayProxyResponse{
-	//		StatusCode: 404,
-	//	}, nil
-	//}
-	//
-	//randomFactEntity := factEntities[rand.Intn(len(factEntities))]
-	//randomFactBody, err := json.Marshal(FactResponse{Text: randomFactEntity.Text})
-	//if err != nil {
-	//	slog.Error(
-	//		"failed to marshal random fact",
-	//		slog.Any("err", err),
-	//	)
-	//	return events.APIGatewayProxyResponse{
-	//		StatusCode: 500,
-	//	}, nil
-	//}
-	//
-	//return events.APIGatewayProxyResponse{
-	//	Body:       string(randomFactBody),
-	//	StatusCode: 200,
-	//	Headers: map[string]string{
-	//		"Content-Type": "application/json",
-	//	},
-	//}, nil
-	return events.APIGatewayProxyResponse{}, nil
+func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	offset := 0
+	offsetString, ok := r.QueryStringParameters["offset"]
+	if ok {
+		parsedOffset, err := strconv.Atoi(offsetString)
+		if err != nil {
+			slog.Error("failed to parse offset", slog.Any("err", err))
+			return events.APIGatewayProxyResponse{
+				StatusCode: 400,
+			}, nil
+		}
+		offset = parsedOffset
+	}
+
+	limit := 50
+	limitString, ok := r.QueryStringParameters["limit"]
+	if ok {
+		parsedLimit, err := strconv.Atoi(limitString)
+		if err != nil {
+			slog.Error("failed to parse limit", slog.Any("err", err))
+			return events.APIGatewayProxyResponse{
+				StatusCode: 400,
+			}, nil
+		}
+		limit = parsedLimit
+	}
+
+	var customerId *uuid.UUID
+	customerIdString, ok := r.QueryStringParameters["customer_id"]
+	if ok {
+		parsedCustomerId, err := uuid.Parse(customerIdString)
+		if err != nil {
+			slog.Error("failed to parse customerId", slog.Any("err", err))
+			return events.APIGatewayProxyResponse{
+				StatusCode: 400,
+			}, nil
+		}
+		customerId = &parsedCustomerId
+	}
+
+	ordersResponse, err := handler.OrderService.GetOrders(ctx, offset, limit, customerId)
+	if err != nil {
+		slog.Error("failed to get orders", slog.Any("err", err))
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+		}, nil
+	}
+
+	ordersResponseBody, err := json.Marshal(ordersResponse)
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+		Body: string(ordersResponseBody),
+	}, nil
 }
