@@ -23,14 +23,13 @@ on:
         required: true
         type: string
 
-defaults:
-  run:
-    working-directory: ${{ inputs.project-path }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.region }}-${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
     env:
       REGION: ${{ inputs.region }}
       ENVIRONMENT: ${{ inputs.environment }}
