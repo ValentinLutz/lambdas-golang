@@ -52,6 +52,15 @@ jobs:
       - name: changes detected
         run: echo "File changes detected"
 
+  lint:
+    uses: ./.github/workflows/lint.yaml
+    needs:
+      - changes-gate
+    secrets: inherit
+    with:
+      go-version: ${{ inputs.go-version }}
+      project-path: ${{ inputs.project-path }}
+
   test:
     uses: ./.github/workflows/test.yaml
     needs:

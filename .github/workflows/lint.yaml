@@ -1,0 +1,42 @@
+name: Lint service
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        required: true
+        type: string
+
+      project-path:
+        required: true
+        type: string
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+          cache-dependency-path: ./go.sum
+
+      - uses: magefile/mage-action@v3
+        with:
+          install-only: true
+
+      - name: install dependencies
+        run: mage dep:install
+
+      - name: generate dependencies
+        run: mage dep:generate
+
+      - name: run linters
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.55.2

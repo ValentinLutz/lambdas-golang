@@ -3,8 +3,8 @@ name: Build, test and deploy all services
 on: [ push ]
 
 jobs:
-  build-test-deploy:
-    uses: ./.github/workflows/build-test-deploy.yaml
+  build:
+    uses: ./.github/workflows/build.yaml
     strategy:
       matrix:
         project-path: [ services/order ]
