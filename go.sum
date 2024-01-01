@@ -4,8 +4,8 @@ github.com/aws/aws-cdk-go/awscdk/v2 v2.111.0 h1:JnGTHsoTNXDQmgxeqafR64Gx43dyFC/5
 github.com/aws/aws-cdk-go/awscdk/v2 v2.111.0/go.mod h1:NuvzNmRjbXEofQ35qpl8U+FtjiH+rNKFQXRzSWkOnI8=
 github.com/aws/aws-lambda-go v1.41.0 h1:l/5fyVb6Ud9uYd411xdHZzSf2n86TakxzpvIoz7l+3Y=
 github.com/aws/aws-lambda-go v1.41.0/go.mod h1:jwFe2KmMsHmffA1X2R09hH6lFzJQxzI8qK17ewzbQMM=
-github.com/aws/aws-sdk-go-v2 v1.23.4 h1:2P20ZjH0ouSAu/6yZep8oCmTReathLuEu6dwoqEgjts=
-github.com/aws/aws-sdk-go-v2 v1.23.4/go.mod h1:t3szzKfP0NeRU27uBFczDivYJjsmSnqI8kIvKyWb9ds=
+github.com/aws/aws-sdk-go-v2 v1.24.0 h1:890+mqQ+hTpNuw0gGP6/4akolQkSToDJgHfQE7AwGuk=
+github.com/aws/aws-sdk-go-v2 v1.24.0/go.mod h1:LNh45Br1YAkEKaAqvmE1m8FUx6a5b/V0oAKV7of29b4=
 github.com/aws/aws-sdk-go-v2/config v1.25.10 h1:qw/e8emDtNufTkrAU86DlQ18DruMyyM7ttW6Lgwp4v0=
 github.com/aws/aws-sdk-go-v2/config v1.25.10/go.mod h1:203YiAtb6XyoGxXMPsUVwEcuxCiTQY/r8P27IDjfvMc=
 github.com/aws/aws-sdk-go-v2/credentials v1.16.8 h1:phw9nRLy/77bPk6Mfu2SHCOnHwfVB7WWrOa5rZIY2Fc=
@@ -34,8 +34,8 @@ github.com/aws/constructs-go/constructs/v10 v10.3.0 h1:LsjBIMiaDX/vqrXWhzTquBJ9p
 github.com/aws/constructs-go/constructs/v10 v10.3.0/go.mod h1:GgzwIwoRJ2UYsr3SU+JhAl+gq5j39bEMYf8ev3J+s9s=
 github.com/aws/jsii-runtime-go v1.92.0 h1:2Uk81AmgQ+p1tkRpcA01XXiqrXcaGIyTZS6HGY2ni6w=
 github.com/aws/jsii-runtime-go v1.92.0/go.mod h1:nwCGoF0yOzfgXL3B47zRS30rSskPQFkPFqZgEyMQ59I=
-github.com/aws/smithy-go v1.18.1 h1:pOdBTUfXNazOlxLrgeYalVnuTpKreACHtc62xLwIB3c=
-github.com/aws/smithy-go v1.18.1/go.mod h1:NukqUGpCZIILqqiV0NIjeFh24kd/FAa4beRb6nbIUPE=
+github.com/aws/smithy-go v1.19.0 h1:KWFKQV80DpP3vJrrA9sVAHQ5gc2z8i4EzrLhLlWXcBM=
+github.com/aws/smithy-go v1.19.0/go.mod h1:NukqUGpCZIILqqiV0NIjeFh24kd/FAa4beRb6nbIUPE=
 github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.201 h1:0za9Qxne1jWawrxUnoli/zDVgBptS5nZpFrdLmxP5wA=
 github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.201/go.mod h1:SrEoz1cauDlwKmCqgcE6JsfbW54xuz0R5O5IADdjUHo=
 github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.2 h1:k+WD+6cERd59Mao84v0QtRrcdZuuSMfzlEmuIypKnVs=
@@ -68,8 +68,6 @@ github.com/mattn/go-sqlite3 v1.14.6 h1:dNPt6NO46WmLVt2DLNpwczCmdV5boIZ6g/tlDrlRU
 github.com/mattn/go-sqlite3 v1.14.6/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/maxatome/go-testdeep v1.13.0 h1:EBmRelH7MhMfPvA+0kXAeOeJUXn3mzul5NmvjLDcQZI=
 github.com/maxatome/go-testdeep v1.13.0/go.mod h1:lPZc/HAcJMP92l7yI6TRz1aZN5URwUBUAfUNvrclaNM=
-github.com/oapi-codegen/runtime v1.1.0 h1:rJpoNUawn5XTvekgfkvSZr0RqEnoYpFkyvrzfWeFKWM=
-github.com/oapi-codegen/runtime v1.1.0/go.mod h1:BeSfBkWWWnAnGdyS+S/GnlbmHKzf8/hwkvelJZDeKA8=
 github.com/oklog/ulid/v2 v2.1.0 h1:+9lhoxAP56we25tyYETBBY1YLA2SaoLvUFgrP2miPJU=
 github.com/oklog/ulid/v2 v2.1.0/go.mod h1:rcEKHmBBKfef9DhnvX7y1HZBYxjXb0cP5ExxNsTT1QQ=
 github.com/pborman/getopt v0.0.0-20170112200414-7148bc3a4c30/go.mod h1:85jBQOZwpVEaDAr341tbn15RS4fCAsIst0qp7i8ex1o=

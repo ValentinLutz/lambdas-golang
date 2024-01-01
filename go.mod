@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/aws/aws-cdk-go/awscdk/v2 v2.111.0
 	github.com/aws/aws-lambda-go v1.41.0
-	github.com/aws/aws-sdk-go-v2 v1.23.4
+	github.com/aws/aws-sdk-go-v2 v1.24.0
 	github.com/aws/aws-sdk-go-v2/config v1.25.10
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.25.1
 	github.com/aws/constructs-go/constructs/v10 v10.3.0
@@ -15,7 +15,6 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/magefile/mage v1.15.0
 	github.com/maxatome/go-testdeep v1.13.0
-	github.com/oapi-codegen/runtime v1.1.0
 	github.com/oklog/ulid/v2 v2.1.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -32,7 +31,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.18.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.21.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.1 // indirect
-	github.com/aws/smithy-go v1.18.1 // indirect
+	github.com/aws/smithy-go v1.19.0 // indirect
 	github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.201 // indirect
 	github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.2 // indirect
 	github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv6/v2 v2.0.1 // indirect
