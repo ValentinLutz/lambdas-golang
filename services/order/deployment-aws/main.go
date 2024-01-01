@@ -8,7 +8,10 @@ import (
 func main() {
 	defer jsii.Close()
 
-	config := NewStageConfig()
+	config, err := NewStageConfig()
+	if err != nil {
+		panic(err)
+	}
 
 	app := awscdk.NewApp(nil)
 	tags := awscdk.Tags_Of(app)

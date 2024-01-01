@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"root/services/order/lambda-shared/incoming"
 	shared "root/services/order/lambda-shared/outgoing"
 	"root/services/order/lambda-v1-get-orders/outgoing"
@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	InvalidOffsetError = errors.New("offset must be greater than or equal to 0")
-	InvalidLimitError  = errors.New("limit must be greater than 0")
+	ErrInvalidOffset = fmt.Errorf("offset must be greater than or equal to 0")
+	ErrInvalidLimit  = fmt.Errorf("limit must be greater than 0")
 )
 
 type OrderService struct {
@@ -30,16 +30,16 @@ func (service *OrderService) GetOrders(ctx context.Context, offset int, limit in
 	error,
 ) {
 	if offset < 0 {
-		return nil, InvalidOffsetError
+		return nil, ErrInvalidOffset
 	}
 	if limit <= 0 {
-		return nil, InvalidLimitError
+		return nil, ErrInvalidLimit
 	}
 
 	if customerId != nil {
 		orderEntities, orderItemEntities, err := service.orderRepository.FindAllOrdersByCustomerId(ctx, *customerId, offset, limit)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to get orders by customer id: %w", err)
 		}
 
 		return newOrdersResponse(orderEntities, orderItemEntities), nil
@@ -47,7 +47,7 @@ func (service *OrderService) GetOrders(ctx context.Context, offset int, limit in
 
 	orderEntities, orderItemEntities, err := service.orderRepository.FindAllOrders(ctx, offset, limit)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get orders: %w", err)
 	}
 
 	return newOrdersResponse(orderEntities, orderItemEntities), nil

@@ -1,0 +1,108 @@
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - api-definition
+    - deployment-aws
+    - deployment-docker
+    - magefiles
+    - migration-database
+    - test-integration
+
+linters:
+  disable-all: true
+  enable:
+    # default linters
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    # custom linters
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - cyclop
+    - decorder
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - execinquery
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - gocheckcompilerdirectives
+    - gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocyclo
+    - godot
+    - godox
+    - goerr113
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - grouper
+    - inamedparam
+    - interfacebloat
+    - lll
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnil
+    - nlreturn
+    - noctx
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - rowserrcheck
+    - sloglint
+    - sqlclosecheck
+    - tagalign
+    - tagliatelle
+    - tenv
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+    - wrapcheck
+
+linters-settings:
+  sloglint:
+    no-raw-keys: true
+    attr-only: true
+    key-naming-case: snake
+    args-on-sep-lines: true
+  tagliatelle:
+    case:
+      rules:
+        json: snake
+        yaml: snake
+  lll:
+    line-length: 140

@@ -29,6 +29,7 @@ func NewHandler() (*Handler, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to load aws default config: %w", err)
 	}
+
 	secret, err := apputil.GetSecret(cfg, os.Getenv("DB_SECRET_ID"))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get database secret: %w", err)
@@ -38,6 +39,7 @@ func NewHandler() (*Handler, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database config: %w", err)
 	}
+
 	database, err := apputil.NewDatabase(dbConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database: %w", err)
@@ -52,13 +54,14 @@ func NewHandler() (*Handler, error) {
 	}, nil
 }
 
-func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	offset := 0
-	offsetString, ok := r.QueryStringParameters["offset"]
+	offsetString, ok := request.QueryStringParameters["offset"]
 	if ok {
 		parsedOffset, err := strconv.Atoi(offsetString)
 		if err != nil {
-			slog.Error("failed to parse offset", slog.Any("err", err))
+			slog.Error("failed to parse offset", apputil.ErrorAttr(err))
+
 			return events.APIGatewayProxyResponse{
 				StatusCode: 400,
 			}, nil
@@ -67,11 +70,12 @@ func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequ
 	}
 
 	limit := 50
-	limitString, ok := r.QueryStringParameters["limit"]
+	limitString, ok := request.QueryStringParameters["limit"]
 	if ok {
 		parsedLimit, err := strconv.Atoi(limitString)
 		if err != nil {
-			slog.Error("failed to parse limit", slog.Any("err", err))
+			slog.Error("failed to parse limit", apputil.ErrorAttr(err))
+
 			return events.APIGatewayProxyResponse{
 				StatusCode: 400,
 			}, nil
@@ -80,11 +84,12 @@ func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequ
 	}
 
 	var customerId *uuid.UUID
-	customerIdString, ok := r.QueryStringParameters["customer_id"]
+	customerIdString, ok := request.QueryStringParameters["customer_id"]
 	if ok {
 		parsedCustomerId, err := uuid.Parse(customerIdString)
 		if err != nil {
-			slog.Error("failed to parse customerId", slog.Any("err", err))
+			slog.Error("failed to parse customerId", apputil.ErrorAttr(err))
+
 			return events.APIGatewayProxyResponse{
 				StatusCode: 400,
 			}, nil
@@ -94,13 +99,22 @@ func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequ
 
 	ordersResponse, err := handler.OrderService.GetOrders(ctx, offset, limit, customerId)
 	if err != nil {
-		slog.Error("failed to get orders", slog.Any("err", err))
+		slog.Error("failed to get orders", apputil.ErrorAttr(err))
+
 		return events.APIGatewayProxyResponse{
 			StatusCode: 500,
 		}, nil
 	}
 
 	ordersResponseBody, err := json.Marshal(ordersResponse)
+	if err != nil {
+		slog.Error("failed to marshal orders response", apputil.ErrorAttr(err))
+
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+		}, nil
+	}
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{

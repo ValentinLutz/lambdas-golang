@@ -16,25 +16,33 @@ type DatabaseConfig struct {
 	Password string
 }
 
+var (
+	ErrSecretUsernameNotSet = fmt.Errorf("secret username not set")
+	ErrSecretPasswordNotSet = fmt.Errorf("secret password not set")
+	ErrDbHostEnvNotSet      = fmt.Errorf("env DB_HOST not set")
+	ErrDbPortEnvNotSet      = fmt.Errorf("env DB_PORT not set")
+	ErrDbNameEnvNotSet      = fmt.Errorf("env DB_NAME not set")
+)
+
 func NewDatabaseConfig(secret Secret) (*DatabaseConfig, error) {
 	if secret.Username == "" {
-		return nil, fmt.Errorf("secret username not set")
+		return nil, ErrSecretUsernameNotSet
 	}
 	if secret.Password == "" {
-		return nil, fmt.Errorf("secret password not set")
+		return nil, ErrSecretPasswordNotSet
 	}
 
 	host, ok := os.LookupEnv("DB_HOST")
 	if !ok {
-		return nil, fmt.Errorf("env DB_HOST not set")
+		return nil, ErrDbHostEnvNotSet
 	}
 	port, ok := os.LookupEnv("DB_PORT")
 	if !ok {
-		return nil, fmt.Errorf("env DB_PORT not set")
+		return nil, ErrDbPortEnvNotSet
 	}
 	name, ok := os.LookupEnv("DB_NAME")
 	if !ok {
-		return nil, fmt.Errorf("env DB_NAME not set")
+		return nil, ErrDbNameEnvNotSet
 	}
 
 	return &DatabaseConfig{
@@ -60,6 +68,7 @@ func NewDatabase(config *DatabaseConfig) (*sqlx.DB, error) {
 	err = db.Ping()
 	if err != nil {
 		_ = db.Close()
+
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 

@@ -74,6 +74,7 @@ jobs:
     uses: ./.github/workflows/deploy.yaml
     needs:
       - changes-gate
+      - lint
       - test
     secrets: inherit
     with:

@@ -16,10 +16,14 @@ func NewSlogDefault(level slog.Level) {
 	slog.SetDefault(logger)
 }
 
+func ErrorAttr(value error) slog.Attr {
+	return slog.Any("err", value)
+}
+
 func SetTraceId(traceId string) {
-	slog.Default().With("trace_id", traceId)
+	slog.SetDefault(slog.With("trace_id", traceId))
 }
 
 func SetCorrelationId(correlationId string) {
-	slog.Default().With("correlation_id", correlationId)
+	slog.SetDefault(slog.With("correlation_id", correlationId))
 }

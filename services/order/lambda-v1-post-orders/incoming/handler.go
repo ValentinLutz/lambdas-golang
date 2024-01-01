@@ -21,6 +21,11 @@ type Handler struct {
 	OrderService *core.OrderService
 }
 
+var (
+	ErrDbSecretIdEnvNotSet  = fmt.Errorf("env DB_SECRET_ID not set")
+	ErrOrderRegionEnvNotSet = fmt.Errorf("env ORDER_REGION not set")
+)
+
 func NewHandler() (*Handler, error) {
 	apputil.NewSlogDefault(slog.LevelInfo)
 
@@ -31,8 +36,9 @@ func NewHandler() (*Handler, error) {
 
 	DbSecretIdEnv, ok := os.LookupEnv("DB_SECRET_ID")
 	if !ok {
-		return nil, fmt.Errorf("env DB_SECRET_ID not set")
+		return nil, ErrDbSecretIdEnvNotSet
 	}
+
 	secret, err := apputil.GetSecret(cfg, DbSecretIdEnv)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get database secret: %w", err)
@@ -42,6 +48,7 @@ func NewHandler() (*Handler, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database config: %w", err)
 	}
+
 	database, err := apputil.NewDatabase(dbConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create database: %w", err)
@@ -49,7 +56,7 @@ func NewHandler() (*Handler, error) {
 
 	regionEnv, ok := os.LookupEnv("ORDER_REGION")
 	if !ok {
-		return nil, fmt.Errorf("env ORDER_REGION not set")
+		return nil, ErrOrderRegionEnvNotSet
 	}
 
 	orderRepository := outgoing.NewOrderRepository(database)
@@ -65,11 +72,12 @@ func NewHandler() (*Handler, error) {
 	}, nil
 }
 
-func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var orderRequest incoming.OrderRequest
-	err := json.Unmarshal([]byte(r.Body), &orderRequest)
+	err := json.Unmarshal([]byte(request.Body), &orderRequest)
 	if err != nil {
-		slog.Error("failed to unmarshal order request", slog.Any("err", err))
+		slog.Error("failed to unmarshal order request", apputil.ErrorAttr(err))
+
 		return events.APIGatewayProxyResponse{
 			StatusCode: 400,
 		}, nil
@@ -77,13 +85,22 @@ func (handler *Handler) Invoke(ctx context.Context, r events.APIGatewayProxyRequ
 
 	orderResponse, err := handler.OrderService.PlaceOrder(ctx, orderRequest)
 	if err != nil {
-		slog.Error("failed to place order", slog.Any("err", err))
+		slog.Error("failed to place order", apputil.ErrorAttr(err))
+
 		return events.APIGatewayProxyResponse{
 			StatusCode: 500,
 		}, nil
 	}
 
 	orderResponseBody, err := json.Marshal(orderResponse)
+	if err != nil {
+		slog.Error("failed to marshal orders response", apputil.ErrorAttr(err))
+
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+		}, nil
+	}
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{

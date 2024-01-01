@@ -30,7 +30,7 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 		service.region,
 	)
 
-	var orderItems []shared.OrderItemEntity
+	orderItems := make([]shared.OrderItemEntity, 0)
 	for _, item := range orderRequest.Items {
 		orderItems = append(
 			orderItems, shared.OrderItemEntity{
@@ -63,6 +63,7 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 			},
 		)
 	}
+
 	return incoming.OrderResponse{
 		OrderId:      string(orderId),
 		CustomerId:   orderRequest.CustomerId,

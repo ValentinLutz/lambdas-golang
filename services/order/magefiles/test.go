@@ -12,6 +12,10 @@ import (
 
 type Test mg.Namespace
 
+func (Test) Lint() error {
+	return sh.RunV("golangci-lint", "run")
+}
+
 // Integration runs the integration tests
 func (Test) Integration() error {
 	getOrSetDefaultStageEnvVars()

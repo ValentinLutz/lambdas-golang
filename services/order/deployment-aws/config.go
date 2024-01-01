@@ -94,23 +94,31 @@ type StageConfig struct {
 	lambdaConfig  LambdaConfig
 }
 
-func NewStageConfig() *StageConfig {
+var (
+	ErrStageConfigNotFound      = fmt.Errorf("stage config not found")
+	ErrRegionEnvNotSet          = fmt.Errorf("env REGION not set")
+	ErrEnvironmentEnvNotSet     = fmt.Errorf("env ENVIRONMENT not set")
+	ErrArchitectureNotSupported = fmt.Errorf("architecture not supported")
+)
+
+func NewStageConfig() (*StageConfig, error) {
 	region, ok := os.LookupEnv("REGION")
 	if !ok {
-		panic("env REGION not set")
+		return nil, ErrRegionEnvNotSet
 	}
 
 	env, ok := os.LookupEnv("ENVIRONMENT")
 	if !ok {
-		panic("env ENVIRONMENT not set")
+		return nil, ErrEnvironmentEnvNotSet
 	}
 
 	stageKey := region + "-" + env
 	stage, ok := stageConfigs[stageKey]
 	if !ok {
-		panic(fmt.Errorf("stage config %s not found", stageKey))
+		return nil, fmt.Errorf("%w: %s", ErrStageConfigNotFound, stageKey)
 	}
-	return stage
+
+	return stage, nil
 }
 
 func NewIdWithStage(stage *StageConfig, id string) *string {
@@ -124,6 +132,6 @@ func GetArchitecture() awslambda.Architecture {
 	case "arm64":
 		return awslambda.Architecture_ARM_64()
 	default:
-		panic(fmt.Errorf("architecture %s not supported", runtime.GOARCH))
+		panic(fmt.Errorf("%w: %s", ErrArchitectureNotSupported, runtime.GOARCH))
 	}
 }
