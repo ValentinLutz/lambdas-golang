@@ -15,6 +15,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/magefile/mage v1.15.0
 	github.com/maxatome/go-testdeep v1.13.0
+	github.com/oapi-codegen/runtime v1.1.0
 	github.com/oklog/ulid/v2 v2.1.0
 	gopkg.in/yaml.v3 v3.0.1
 )
