@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/aws/aws-cdk-go/awscdk/v2 v2.117.0
-	github.com/aws/aws-lambda-go v1.41.0
+	github.com/aws/aws-lambda-go v1.43.0
 	github.com/aws/aws-sdk-go-v2 v1.24.0
 	github.com/aws/aws-sdk-go-v2/config v1.25.10
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.26.0
