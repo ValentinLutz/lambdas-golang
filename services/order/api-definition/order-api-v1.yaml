@@ -52,7 +52,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrderFunctionArn }}/invocations"
+        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrdersFunctionArn }}/invocations"
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
     post:
@@ -78,39 +78,44 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .PostOrderFunctionArn }}/invocations"
+        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .PostOrdersFunctionArn }}/invocations"
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
-#  /v1/orders/{order_id}:
-#    get:
-#      operationId: "get_order"
-#      summary: "Get information about a specific order"
-#      parameters:
-#        - name: "order_id"
-#          in: "path"
-#          required: true
-#          description: "The id of the order to retrieve"
-#          schema:
-#            type: "string"
-#      responses:
-#        "200":
-#          description: "Information about a single order"
-#          content:
-#            application/json:
-#              schema:
-#                $ref: "#/components/schemas/OrderResponse"
-#        "400":
-#          $ref: "#/components/responses/BadRequestError"
-#        "401":
-#          $ref: "#/components/responses/UnauthorizedError"
-#        "404":
-#          description: "Order not found"
-#          content:
-#            application/json:
-#              schema:
-#                $ref: "#/components/schemas/ErrorResponse"
-#        "500":
-#          $ref: "#/components/responses/UnexpectedError"
+  /v1/orders/{order_id}:
+    get:
+      operationId: "get_order"
+      summary: "Get information about a specific order"
+      parameters:
+        - name: "order_id"
+          in: "path"
+          required: true
+          description: "The id of the order to retrieve"
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Information about a single order"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: "Order not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      x-amazon-apigateway-integration:
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrderFunctionArn }}/invocations"
+        type: "aws_proxy"
+        passthroughBehavior: "when_no_match"
 components:
   responses:
     BadRequestError:

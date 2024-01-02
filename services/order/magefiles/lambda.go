@@ -32,6 +32,7 @@ func (Lambda) Build() error {
 	getOrSetDefaultBuildEnvVars()
 
 	lambdas := []string{
+		"./lambda-v1-get-order",
 		"./lambda-v1-get-orders",
 		"./lambda-v1-post-orders",
 	}

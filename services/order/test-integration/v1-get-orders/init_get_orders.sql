@@ -1,24 +1,24 @@
 INSERT INTO order_service.order
     (order_id, customer_id, order_workflow, creation_date, order_status)
-VALUES ('IsQah2TkaqS-NONE-JewgL0Ye73g', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
+VALUES ('01HK5VD1NN2V0-EU-EHHDDPYPXDDRA', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
         '1970-01-01 00:00:00 +00:00', 'order_placed'),
 
-       ('Fs2VoM7ZhrK-NONE-vzTf7kaHbRA', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
+       ('01HK5VZG8ZY60-EU-VNB5J6P15EPB0', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
         '1970-01-01 00:00:00 +00:00', 'order_in_progress'),
 
-       ('sgy1K3*SXcv-NONE-eVbldUAYXnA', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
+       ('01HK5VZG90SWD-EU-MK2PN9ZV2FRN8', '44bd6239-7e3d-4d4a-90a0-7d4676a00f5c', 'default_workflow',
         '1970-01-01 00:00:00 +00:00', 'order_canceled'),
 
-       ('F2P!criGu2L-NONE-fJ7bBFx1vHg', 'cd8641e3-196a-4045-a0b6-706a80e48262', 'default_workflow',
+       ('01HK5VZG93FC9-EU-QYR4T29PR68M3', 'cd8641e3-196a-4045-a0b6-706a80e48262', 'default_workflow',
         '1970-01-01 00:00:00 +00:00', 'order_completed');
 
 INSERT INTO order_service.order_item
     (order_id, creation_date, order_item_name)
-VALUES ('IsQah2TkaqS-NONE-JewgL0Ye73g', '1970-01-01 00:00:00 +00:00', 'orange'),
-       ('IsQah2TkaqS-NONE-JewgL0Ye73g', '1970-01-01 00:00:00 +00:00', 'banana'),
+VALUES ('01HK5VD1NN2V0-EU-EHHDDPYPXDDRA', '1970-01-01 00:00:00 +00:00', 'orange'),
+       ('01HK5VD1NN2V0-EU-EHHDDPYPXDDRA', '1970-01-01 00:00:00 +00:00', 'banana'),
 
-       ('Fs2VoM7ZhrK-NONE-vzTf7kaHbRA', '1970-01-01 00:00:00 +00:00', 'chocolate'),
+       ('01HK5VZG8ZY60-EU-VNB5J6P15EPB0', '1970-01-01 00:00:00 +00:00', 'chocolate'),
 
-       ('sgy1K3*SXcv-NONE-eVbldUAYXnA', '1970-01-01 00:00:00 +00:00', 'marshmallow'),
+       ('01HK5VZG90SWD-EU-MK2PN9ZV2FRN8', '1970-01-01 00:00:00 +00:00', 'marshmallow'),
 
-       ('F2P!criGu2L-NONE-fJ7bBFx1vHg', '1970-01-01 00:00:00 +00:00', 'apple');
+       ('01HK5VZG93FC9-EU-QYR4T29PR68M3', '1970-01-01 00:00:00 +00:00', 'apple');

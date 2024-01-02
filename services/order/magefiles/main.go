@@ -10,6 +10,7 @@ func Clean() error {
 		"./deployment-aws/cdk.out",
 		"./.aws-sam",
 		"./lambda-shared/incoming/model.gen.go",
+		"./lambda-v1-get-order/bootstrap",
 		"./lambda-v1-get-orders/bootstrap",
 		"./lambda-v1-post-orders/bootstrap",
 		"./test-integration/coverage.out",

@@ -35,7 +35,7 @@ func Test_Post_Orders(t *testing.T) {
 
 			td.CmpJSON(
 				t, respBody, "./post_orders_response.json", []any{
-					td.Re("^[A-Za-z0-9]{13}-[A-Z]{2,4}-[A-Za-z0-9]{13}$"),
+					td.Re("^[A-Z0-9]{13}-EU-[A-Z0-9]{13}$"),
 					td.NotEmpty(),
 				},
 			)

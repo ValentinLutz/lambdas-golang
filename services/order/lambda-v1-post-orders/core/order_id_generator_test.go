@@ -10,22 +10,21 @@ import (
 
 func Benchmark_NewOrderId(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		core.NewOrderId(core.RegionNone)
+		core.NewOrderId(core.RegionEu)
 	}
 }
 
 func Test_NewOrderId(t *testing.T) {
 	// given
-	regions := []string{
-		"REGION_NONE",
-		"RegionEu",
-		"RegionUs",
+	regions := []core.Region{
+		core.RegionEu,
+		core.RegionEu,
 	}
-	regex := regexp.MustCompile("^[A-Za-z0-9]{13}-[A-Z]{2,4}-[A-Za-z0-9]{13}$")
+	regex := regexp.MustCompile("^[A-Z0-9]{13}-[A-Z]{2}-[A-Z0-9]{13}$")
 
 	for _, region := range regions {
 		for i := 0; i < 100; i++ {
-			t.Run(region, testNewOrderId(core.Region(region), regex))
+			t.Run(string(region), testNewOrderId(region, regex))
 		}
 	}
 }
@@ -36,7 +35,8 @@ func testNewOrderId(region core.Region, regex *regexp.Regexp) func(t *testing.T)
 
 		// when
 		orderId := core.NewOrderId(region)
+
 		// then
-		td.Re(t, orderId, regex)
+		td.CmpRe(t, orderId, regex, nil)
 	}
 }

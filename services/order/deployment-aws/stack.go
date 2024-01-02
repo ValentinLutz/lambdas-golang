@@ -14,7 +14,39 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
+func NewGetOrderFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
+	env := map[string]*string{
+		"DB_HOST":      &config.databaseProps.host,
+		"DB_PORT":      &config.databaseProps.port,
+		"DB_NAME":      &config.databaseProps.name,
+		"DB_SECRET_ID": &config.databaseProps.secret,
+	}
+	if config.endpointUrl != nil {
+		env["AWS_ENDPOINT_URL"] = config.endpointUrl
+	}
+
+	return awslambda.NewFunction(
+		stack, NewIdWithStage(config, "function-v1-get-order"), &awslambda.FunctionProps{
+			Code: awslambda.Code_FromAsset(
+				jsii.String("../lambda-v1-get-order"),
+				&awss3assets.AssetOptions{
+					IgnoreMode: awscdk.IgnoreMode_GIT,
+					Exclude: &[]*string{
+						jsii.String("**"),
+						jsii.String("!bootstrap"),
+					},
+				},
+			),
+			Runtime:      awslambda.Runtime_PROVIDED_AL2023(),
+			Handler:      jsii.String("bootstrap"),
+			Architecture: config.lambdaConfig.architecture,
+			Environment:  &env,
+			Tracing:      awslambda.Tracing_ACTIVE,
+		},
+	)
+}
+
+func NewGetOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
 	env := map[string]*string{
 		"DB_HOST":      &config.databaseProps.host,
 		"DB_PORT":      &config.databaseProps.port,
@@ -46,7 +78,7 @@ func NewGetFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function 
 	)
 }
 
-func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
+func NewPostOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
 	env := map[string]*string{
 		"DB_HOST":      &config.databaseProps.host,
 		"DB_PORT":      &config.databaseProps.port,
@@ -80,8 +112,9 @@ func NewPostFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function
 }
 
 func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
-	getFunction := NewGetFunction(stack, config)
-	postFunction := NewPostFunction(stack, config)
+	getOrderFunction := NewGetOrderFunction(stack, config)
+	getOrdersFunction := NewGetOrdersFunction(stack, config)
+	postOrdersFunction := NewPostOrdersFunction(stack, config)
 
 	openApiSpecs, err := template.ParseFiles("../api-definition/order-api-v1.yaml")
 	if err != nil {
@@ -91,8 +124,9 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 	var orderApiV1 bytes.Buffer
 	err = openApiSpecs.Execute(
 		&orderApiV1, map[string]string{
-			"GetOrderFunctionArn":  *getFunction.FunctionArn(),
-			"PostOrderFunctionArn": *postFunction.FunctionArn(),
+			"GetOrderFunctionArn":   *getOrderFunction.FunctionArn(),
+			"GetOrdersFunctionArn":  *getOrdersFunction.FunctionArn(),
+			"PostOrdersFunctionArn": *postOrdersFunction.FunctionArn(),
 		},
 	)
 	if err != nil {
@@ -117,13 +151,19 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 		},
 	)
 
-	getFunction.AddPermission(
+	getOrderFunction.AddPermission(
+		jsii.String("AllowApiGatewayInvoke"), &awslambda.Permission{
+			Principal: awsiam.NewServicePrincipal(jsii.String("apigateway.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
+			SourceArn: restApi.ArnForExecuteApi(jsii.String("GET"), jsii.String("/v1/orders/{order_id}"), nil),
+		},
+	)
+	getOrdersFunction.AddPermission(
 		jsii.String("AllowApiGatewayInvoke"), &awslambda.Permission{
 			Principal: awsiam.NewServicePrincipal(jsii.String("apigateway.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 			SourceArn: restApi.ArnForExecuteApi(jsii.String("GET"), jsii.String("/v1/orders"), nil),
 		},
 	)
-	postFunction.AddPermission(
+	postOrdersFunction.AddPermission(
 		jsii.String("AllowApiGatewayInvoke"), &awslambda.Permission{
 			Principal: awsiam.NewServicePrincipal(jsii.String("apigateway.amazonaws.com"), &awsiam.ServicePrincipalOpts{}),
 			SourceArn: restApi.ArnForExecuteApi(jsii.String("POST"), jsii.String("/v1/orders"), nil),

@@ -2,11 +2,13 @@ package testintegration
 
 import (
 	"os"
+	v1GetOrder "root/services/order/lambda-v1-get-order/incoming"
 	v1GetOrders "root/services/order/lambda-v1-get-orders/incoming"
 	v1PostOrders "root/services/order/lambda-v1-post-orders/incoming"
 )
 
 var (
+	V1GetOrderHandler   *v1GetOrder.Handler
 	V1GetOrdersHandler  *v1GetOrders.Handler
 	V1PostOrdersHandler *v1PostOrders.Handler
 )
@@ -14,8 +16,17 @@ var (
 func init() {
 	NewTestConfig()
 
+	V1GetOrderHandler = NewV1GetOrderHandler()
 	V1GetOrdersHandler = NewV1GetOrdersHandler()
 	V1PostOrdersHandler = NewV1PostOrdersHandler()
+}
+
+func NewV1GetOrderHandler() *v1GetOrder.Handler {
+	handler, err := v1GetOrder.NewHandler()
+	if err != nil {
+		panic(err)
+	}
+	return handler
 }
 
 func NewV1GetOrdersHandler() *v1GetOrders.Handler {

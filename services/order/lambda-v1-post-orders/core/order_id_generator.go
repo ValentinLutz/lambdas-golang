@@ -9,9 +9,8 @@ import (
 type Region string
 
 const (
-	RegionNone Region = "NONE"
-	RegionEu   Region = "EU"
-	RegionUs   Region = "US"
+	RegionEu Region = "EU"
+	RegionUs Region = "US"
 )
 
 var (
@@ -21,7 +20,7 @@ var (
 func NewRegion(value string) (Region, error) {
 	region := Region(value)
 	switch region {
-	case RegionNone, RegionEu, RegionUs:
+	case RegionEu, RegionUs:
 		return region, nil
 	default:
 		return "", fmt.Errorf("%w: %s", ErrInvalidRegion, value)
