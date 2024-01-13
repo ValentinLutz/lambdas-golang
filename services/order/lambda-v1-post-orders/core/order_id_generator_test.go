@@ -18,7 +18,8 @@ func Test_NewOrderId(t *testing.T) {
 	// given
 	regions := []core.Region{
 		core.RegionEu,
-		core.RegionEu,
+		core.RegionUs,
+		core.RegionCn,
 	}
 	regex := regexp.MustCompile("^[A-Z0-9]{13}-[A-Z]{2}-[A-Z0-9]{13}$")
 
