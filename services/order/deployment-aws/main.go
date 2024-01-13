@@ -15,11 +15,10 @@ func main() {
 
 	app := awscdk.NewApp(nil)
 	tags := awscdk.Tags_Of(app)
-	tags.Add(jsii.String("resource"), jsii.String("order"), &awscdk.TagProps{})
 	tags.Add(jsii.String("region"), &config.region, &awscdk.TagProps{})
 	tags.Add(jsii.String("environment"), &config.environment, &awscdk.TagProps{})
 
-	NewStack(app, NewIdWithStage(config, "order-resource"), config)
+	NewStack(app, NewIdWithStage(config, "OrderService"), config)
 
 	app.Synth(nil)
 }

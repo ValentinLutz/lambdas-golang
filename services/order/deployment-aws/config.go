@@ -7,6 +7,8 @@ import (
 
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/jsii-runtime-go"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 var stageConfigs = map[string]*StageConfig{
@@ -122,7 +124,8 @@ func NewStageConfig() (*StageConfig, error) {
 }
 
 func NewIdWithStage(stage *StageConfig, id string) *string {
-	return jsii.String(id + "-" + stage.region + "-" + stage.environment)
+	envTitleFormat := cases.Title(language.English).String(stage.environment)
+	return jsii.String(id + envTitleFormat)
 }
 
 func GetArchitecture() awslambda.Architecture {

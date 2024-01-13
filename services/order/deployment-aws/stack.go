@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigateway"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslogs"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3assets"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
@@ -25,8 +26,8 @@ func NewGetOrderFunction(stack awscdk.Stack, config *StageConfig) awslambda.Func
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
 
-	return awslambda.NewFunction(
-		stack, NewIdWithStage(config, "function-v1-get-order"), &awslambda.FunctionProps{
+	lambdaFunction := awslambda.NewFunction(
+		stack, jsii.String("FunctionV1GetOrder"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get-order"),
 				&awss3assets.AssetOptions{
@@ -42,8 +43,11 @@ func NewGetOrderFunction(stack awscdk.Stack, config *StageConfig) awslambda.Func
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
 			Tracing:      awslambda.Tracing_ACTIVE,
+			LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		},
 	)
+
+	return lambdaFunction
 }
 
 func NewGetOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
@@ -57,8 +61,8 @@ func NewGetOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fun
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
 
-	return awslambda.NewFunction(
-		stack, NewIdWithStage(config, "function-v1-get-orders"), &awslambda.FunctionProps{
+	lambdaFunction := awslambda.NewFunction(
+		stack, jsii.String("FunctionV1GetOrders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get-orders"),
 				&awss3assets.AssetOptions{
@@ -74,8 +78,11 @@ func NewGetOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fun
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
 			Tracing:      awslambda.Tracing_ACTIVE,
+			LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		},
 	)
+
+	return lambdaFunction
 }
 
 func NewPostOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Function {
@@ -90,8 +97,8 @@ func NewPostOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fu
 		env["AWS_ENDPOINT_URL"] = config.endpointUrl
 	}
 
-	return awslambda.NewFunction(
-		stack, NewIdWithStage(config, "function-v1-post-orders"), &awslambda.FunctionProps{
+	lambdaFunction := awslambda.NewFunction(
+		stack, jsii.String("FunctionV1PostOrders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-post-orders"),
 				&awss3assets.AssetOptions{
@@ -107,8 +114,11 @@ func NewPostOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fu
 			Architecture: config.lambdaConfig.architecture,
 			Environment:  &env,
 			Tracing:      awslambda.Tracing_ACTIVE,
+			LogRetention: awslogs.RetentionDays_ONE_MONTH,
 		},
 	)
+
+	return lambdaFunction
 }
 
 func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
@@ -140,7 +150,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 	}
 
 	restApi := awsapigateway.NewSpecRestApi(
-		stack, NewIdWithStage(config, "order-rest-api"), &awsapigateway.SpecRestApiProps{
+		stack, NewIdWithStage(config, "OrderRestApi"), &awsapigateway.SpecRestApiProps{
 			EndpointTypes: &[]awsapigateway.EndpointType{
 				awsapigateway.EndpointType_PRIVATE,
 			},
@@ -148,6 +158,26 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 			DeployOptions: &awsapigateway.StageOptions{
 				StageName: jsii.String(config.environment),
 			},
+			Policy: awsiam.NewPolicyDocument(
+				&awsiam.PolicyDocumentProps{
+					Statements: &[]awsiam.PolicyStatement{
+						awsiam.NewPolicyStatement(
+							&awsiam.PolicyStatementProps{
+								Effect: awsiam.Effect_ALLOW,
+								Actions: &[]*string{
+									jsii.String("execute-api:Invoke"),
+								},
+								Resources: &[]*string{
+									jsii.String("*"),
+								},
+								Principals: &[]awsiam.IPrincipal{
+									awsiam.NewAnyPrincipal(),
+								},
+							},
+						),
+					},
+				},
+			),
 		},
 	)
 

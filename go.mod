@@ -17,6 +17,7 @@ require (
 	github.com/maxatome/go-testdeep v1.13.0
 	github.com/oapi-codegen/runtime v1.1.0
 	github.com/oklog/ulid/v2 v2.1.0
+	golang.org/x/text v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
