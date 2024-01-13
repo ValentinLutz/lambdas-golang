@@ -54,12 +54,6 @@ jobs:
       - name: install aws-cdk
         run: npm install -g aws-cdk@${{ inputs.cdk-version }}
 
-      - name: install dependencies
-        run: mage dep:install
-
-      - name: generate dependencies
-        run: mage dep:generate
-
       - name: build lambdas
         run: mage lambda:build
 

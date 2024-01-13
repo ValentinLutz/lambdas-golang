@@ -30,12 +30,6 @@ jobs:
         with:
           install-only: true
 
-      - name: install dependencies
-        run: mage dep:install
-
-      - name: generate dependencies
-        run: mage dep:generate
-
       - name: start test dependencies
         run: mage docker:up
 

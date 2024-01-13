@@ -30,12 +30,6 @@ jobs:
         with:
           install-only: true
 
-      - name: install dependencies
-        run: mage dep:install
-
-      - name: generate dependencies
-        run: mage dep:generate
-
       - name: run linters
         uses: golangci/golangci-lint-action@v3
         with:

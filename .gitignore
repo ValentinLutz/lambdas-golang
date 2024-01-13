@@ -12,6 +12,3 @@ bootstrap
 # Testing
 coverage.out
 coverage.html
-
-# Generated code
-*.gen.go
