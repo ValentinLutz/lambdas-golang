@@ -11,6 +11,7 @@ type Region string
 const (
 	RegionEu Region = "EU"
 	RegionUs Region = "US"
+	RegionCn Region = "CN"
 )
 
 var (
