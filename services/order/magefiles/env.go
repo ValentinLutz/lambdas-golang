@@ -32,6 +32,8 @@ type BuildProps struct {
 func getOrSetDefaultBuildEnvVars() *BuildProps {
 	stageEnvVars := getOrSetDefaultStageEnvVars()
 
+	getValueOrSetDefault("CGO_ENABLED", "0")
+
 	if stageEnvVars.Environment == "local" {
 		return &BuildProps{
 			OperatingSystem: getValueOrSetDefault("GOOS", runtime.GOOS),

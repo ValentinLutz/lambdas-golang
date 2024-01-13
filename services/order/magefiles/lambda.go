@@ -50,6 +50,13 @@ func build(path string) error {
 	defer os.Chdir("..")
 
 	return sh.RunV(
-		"go", "build", "-tags", "lambda.norpc", "-o", "bootstrap",
+		"go",
+		"build",
+		"-ldflags=-s",
+		"-ldflags=-w",
+		"-trimpath",
+		"-buildvcs=false",
+		"-tags", "lambda.norpc",
+		"-o", "bootstrap",
 	)
 }
