@@ -21,7 +21,7 @@ var (
 func NewRegion(value string) (Region, error) {
 	region := Region(value)
 	switch region {
-	case RegionEu, RegionUs:
+	case RegionEu, RegionUs, RegionCn:
 		return region, nil
 	default:
 		return "", fmt.Errorf("%w: %s", ErrInvalidRegion, value)
