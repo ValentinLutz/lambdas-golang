@@ -9,7 +9,9 @@ func Clean() error {
 	paths := []string{
 		"./deployment-aws/cdk.out",
 		"./.aws-sam",
-		"./lambda-shared/incoming/model.gen.go",
+		"./lambda-v1-get-order/incoming/model.gen.go",
+		"./lambda-v1-get-orders/incoming/model.gen.go",
+		"./lambda-v1-post-orders/incoming/model.gen.go",
 		"./lambda-v1-get-order/bootstrap",
 		"./lambda-v1-get-orders/bootstrap",
 		"./lambda-v1-post-orders/bootstrap",

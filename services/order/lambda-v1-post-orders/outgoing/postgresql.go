@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"root/services/order/lambda-shared/outgoing"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -19,8 +18,8 @@ func NewOrderRepository(database *sqlx.DB) *OrderRepository {
 
 func (orderRepository *OrderRepository) SaveOrder(
 	ctx context.Context,
-	orderEntity outgoing.OrderEntity,
-	orderItemEntities []outgoing.OrderItemEntity,
+	orderEntity OrderEntity,
+	orderItemEntities []OrderItemEntity,
 ) error {
 	return orderRepository.execTx(
 		ctx, func(tx *sqlx.Tx) error {

@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"os"
 	"root/libraries/apputil"
-	"root/services/order/lambda-shared/incoming"
 	"root/services/order/lambda-v1-post-orders/core"
 	"root/services/order/lambda-v1-post-orders/outgoing"
 
@@ -73,7 +72,7 @@ func NewHandler() (*Handler, error) {
 }
 
 func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var orderRequest incoming.OrderRequest
+	var orderRequest OrderRequest
 	err := json.Unmarshal([]byte(request.Body), &orderRequest)
 	if err != nil {
 		slog.Error("failed to unmarshal order request", apputil.ErrorAttr(err))
@@ -83,7 +82,12 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		}, nil
 	}
 
-	orderResponse, err := handler.OrderService.PlaceOrder(ctx, orderRequest)
+	items := make([]string, 0)
+	for _, item := range orderRequest.Items {
+		items = append(items, item.Name)
+	}
+
+	order, orderItems, err := handler.OrderService.PlaceOrder(ctx, orderRequest.CustomerId, items)
 	if err != nil {
 		slog.Error("failed to place order", apputil.ErrorAttr(err))
 
@@ -92,6 +96,7 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		}, nil
 	}
 
+	orderResponse := NewOrderResponse(order, orderItems)
 	orderResponseBody, err := json.Marshal(orderResponse)
 	if err != nil {
 		slog.Error("failed to marshal orders response", apputil.ErrorAttr(err))

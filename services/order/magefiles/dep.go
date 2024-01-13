@@ -10,16 +10,16 @@ import (
 
 type Dep mg.Namespace
 
-// Install installs the dependencies to generate the api models
+// Install installs the dependencies for mage targets
 func (Dep) Install() error {
-	return sh.RunV("go", "install", "github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0")
+	err := sh.RunV("go", "install", "github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0")
+	if err != nil {
+		return err
+	}
+	return sh.RunV("go", "install", "github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2")
 }
 
 // Generate generates the models from the open api specification
 func (Dep) Generate() error {
-	err := sh.RunV("mkdir", "-p", "./lambda-shared/incoming")
-	if err != nil {
-		return err
-	}
-	return sh.RunV("oapi-codegen", "--config", "./api-definition/oapi-codgen.yaml", "./api-definition/order-api-v1.yaml")
+	return sh.RunV("go", "generate", "./...")
 }

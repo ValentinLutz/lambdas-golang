@@ -1,7 +1,7 @@
 package main
 
 import (
-	"root/services/order/lambda-v1-get-orders/incoming"
+	"root/services/order/lambda-v1-get-order/incoming"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )

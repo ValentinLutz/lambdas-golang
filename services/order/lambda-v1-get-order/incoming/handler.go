@@ -63,7 +63,7 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		}, nil
 	}
 
-	orderResponse, err := handler.OrderService.GetOrder(ctx, orderIdString)
+	order, orderItems, err := handler.OrderService.GetOrder(ctx, orderIdString)
 	if err != nil {
 		if errors.Is(err, outgoing.ErrOrderNotFound) {
 			slog.Error("order not found", apputil.ErrorAttr(err))
@@ -80,6 +80,7 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		}, nil
 	}
 
+	orderResponse := NewOrderResponse(order, orderItems)
 	orderResponseBody, err := json.Marshal(orderResponse)
 	if err != nil {
 		slog.Error("failed to marshal order response", apputil.ErrorAttr(err))

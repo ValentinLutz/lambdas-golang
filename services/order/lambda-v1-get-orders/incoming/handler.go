@@ -97,7 +97,7 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		customerId = &parsedCustomerId
 	}
 
-	ordersResponse, err := handler.OrderService.GetOrders(ctx, offset, limit, customerId)
+	orders, orderItems, err := handler.OrderService.GetOrders(ctx, offset, limit, customerId)
 	if err != nil {
 		slog.Error("failed to get orders", apputil.ErrorAttr(err))
 
@@ -106,6 +106,7 @@ func (handler *Handler) Invoke(ctx context.Context, request events.APIGatewayPro
 		}, nil
 	}
 
+	ordersResponse := NewOrdersResponse(orders, orderItems)
 	ordersResponseBody, err := json.Marshal(ordersResponse)
 	if err != nil {
 		slog.Error("failed to marshal orders response", apputil.ErrorAttr(err))

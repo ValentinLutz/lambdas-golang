@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	shared "root/services/order/lambda-shared/outgoing"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -23,11 +22,11 @@ func NewOrderRepository(database *sqlx.DB) *OrderRepository {
 }
 
 func (orderRepository *OrderRepository) FindOrderByOrderId(ctx context.Context, orderId string) (
-	shared.OrderEntity,
-	[]shared.OrderItemEntity,
+	OrderEntity,
+	[]OrderItemEntity,
 	error,
 ) {
-	var orderEntity shared.OrderEntity
+	var orderEntity OrderEntity
 	err := orderRepository.GetContext(
 		ctx,
 		&orderEntity,
@@ -37,23 +36,23 @@ func (orderRepository *OrderRepository) FindOrderByOrderId(ctx context.Context, 
 		orderId,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
-		return shared.OrderEntity{}, nil, fmt.Errorf("%w: order id %s: %w", ErrOrderNotFound, orderId, err)
+		return OrderEntity{}, nil, fmt.Errorf("%w: order id %s: %w", ErrOrderNotFound, orderId, err)
 	}
 	if err != nil {
-		return shared.OrderEntity{}, nil, fmt.Errorf("failed to fetch order from database: %w", err)
+		return OrderEntity{}, nil, fmt.Errorf("failed to fetch order from database: %w", err)
 	}
 
-	var orderItemEntities []shared.OrderItemEntity
+	var orderItemEntities []OrderItemEntity
 	err = orderRepository.SelectContext(
 		ctx,
 		&orderItemEntities,
-		`SELECT order_item_id, order_id, creation_date, order_item_name 
+		`SELECT order_item_id, order_id, creation_date, order_item_name
 				FROM order_service.order_item 
 				WHERE order_id = $1`,
 		orderId,
 	)
 	if err != nil {
-		return shared.OrderEntity{}, nil, fmt.Errorf("failed to fetch order items from database: %w", err)
+		return OrderEntity{}, nil, fmt.Errorf("failed to fetch order items from database: %w", err)
 	}
 
 	return orderEntity, orderItemEntities, nil

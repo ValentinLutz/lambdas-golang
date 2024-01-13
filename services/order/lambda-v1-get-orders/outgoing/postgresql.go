@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"root/services/order/lambda-shared/outgoing"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -29,8 +28,8 @@ func (orderRepository *OrderRepository) FindAllOrdersByCustomerId(
 	customerId uuid.UUID,
 	offset int,
 	limit int,
-) ([]outgoing.OrderEntity, []outgoing.OrderItemEntity, error) {
-	var orderEntities []outgoing.OrderEntity
+) ([]OrderEntity, []OrderItemEntity, error) {
+	var orderEntities []OrderEntity
 	err := orderRepository.SelectContext(
 		ctx,
 		&orderEntities,
@@ -52,7 +51,7 @@ func (orderRepository *OrderRepository) FindAllOrdersByCustomerId(
 		orderIds = append(orderIds, order.OrderId)
 	}
 
-	var orderItemEntities []outgoing.OrderItemEntity
+	var orderItemEntities []OrderItemEntity
 	err = orderRepository.SelectContext(
 		ctx,
 		&orderItemEntities,
@@ -69,11 +68,11 @@ func (orderRepository *OrderRepository) FindAllOrdersByCustomerId(
 }
 
 func (orderRepository *OrderRepository) FindAllOrders(ctx context.Context, offset int, limit int) (
-	[]outgoing.OrderEntity,
-	[]outgoing.OrderItemEntity,
+	[]OrderEntity,
+	[]OrderItemEntity,
 	error,
 ) {
-	var orderEntities []outgoing.OrderEntity
+	var orderEntities []OrderEntity
 	err := orderRepository.SelectContext(
 		ctx,
 		&orderEntities,
@@ -92,7 +91,7 @@ func (orderRepository *OrderRepository) FindAllOrders(ctx context.Context, offse
 		orderIds = append(orderIds, order.OrderId)
 	}
 
-	var orderItemEntities []outgoing.OrderItemEntity
+	var orderItemEntities []OrderItemEntity
 	err = orderRepository.SelectContext(
 		ctx,
 		&orderItemEntities,

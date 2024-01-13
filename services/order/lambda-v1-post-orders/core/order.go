@@ -3,10 +3,10 @@ package core
 import (
 	"context"
 	"fmt"
-	"root/services/order/lambda-shared/incoming"
-	shared "root/services/order/lambda-shared/outgoing"
 	"root/services/order/lambda-v1-post-orders/outgoing"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type OrderService struct {
@@ -21,8 +21,9 @@ func NewOrderService(region Region, orderRepository *outgoing.OrderRepository) *
 	}
 }
 
-func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incoming.OrderRequest) (
-	incoming.OrderResponse,
+func (service *OrderService) PlaceOrder(ctx context.Context, customerId uuid.UUID, items []string) (
+	outgoing.OrderEntity,
+	[]outgoing.OrderItemEntity,
 	error,
 ) {
 	creationDate := time.Now()
@@ -30,45 +31,30 @@ func (service *OrderService) PlaceOrder(ctx context.Context, orderRequest incomi
 		service.region,
 	)
 
-	orderItems := make([]shared.OrderItemEntity, 0)
-	for _, item := range orderRequest.Items {
+	orderItems := make([]outgoing.OrderItemEntity, 0)
+	for _, item := range items {
 		orderItems = append(
-			orderItems, shared.OrderItemEntity{
+			orderItems, outgoing.OrderItemEntity{
 				OrderItemId:  0,
 				OrderId:      string(orderId),
-				ItemName:     item.Name,
+				ItemName:     item,
 				CreationDate: creationDate,
 			},
 		)
 	}
 
-	order := shared.OrderEntity{
+	order := outgoing.OrderEntity{
 		OrderId:       string(orderId),
-		CustomerId:    orderRequest.CustomerId,
+		CustomerId:    customerId,
 		OrderWorkflow: "default_workflow",
 		CreationDate:  creationDate,
-		OrderStatus:   string(incoming.OrderPlaced),
+		OrderStatus:   "order_placed",
 	}
 
 	err := service.orderRepository.SaveOrder(ctx, order, orderItems)
 	if err != nil {
-		return incoming.OrderResponse{}, fmt.Errorf("failed to save order: %w", err)
+		return outgoing.OrderEntity{}, nil, fmt.Errorf("failed to save order: %w", err)
 	}
 
-	orderItemResponses := make([]incoming.OrderItemResponse, 0)
-	for _, orderItem := range orderItems {
-		orderItemResponses = append(
-			orderItemResponses, incoming.OrderItemResponse{
-				Name: orderItem.ItemName,
-			},
-		)
-	}
-
-	return incoming.OrderResponse{
-		OrderId:      string(orderId),
-		CustomerId:   orderRequest.CustomerId,
-		CreationDate: creationDate,
-		Status:       incoming.OrderPlaced,
-		Items:        orderItemResponses,
-	}, nil
+	return order, orderItems, nil
 }
