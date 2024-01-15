@@ -19,7 +19,7 @@ func (Lambda) Start() error {
 
 	return sh.RunV(
 		"sam", "local", "start-api",
-		"--template", "./deployment-aws/cdk.out/order-resource-eu-central-1-local.template.json",
+		"--template", "./deployment-aws/cdk.out/OrderServiceLocal.template.json",
 		"--docker-network", "lambda-network",
 		"--warm-containers", "EAGER",
 	)

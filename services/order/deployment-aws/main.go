@@ -15,8 +15,8 @@ func main() {
 
 	app := awscdk.NewApp(nil)
 	tags := awscdk.Tags_Of(app)
-	tags.Add(jsii.String("region"), &config.region, &awscdk.TagProps{})
-	tags.Add(jsii.String("environment"), &config.environment, &awscdk.TagProps{})
+	tags.Add(jsii.String("custom:region"), &config.region, &awscdk.TagProps{})
+	tags.Add(jsii.String("custom:environment"), &config.environment, &awscdk.TagProps{})
 
 	NewStack(app, NewIdWithStage(config, "OrderService"), config)
 

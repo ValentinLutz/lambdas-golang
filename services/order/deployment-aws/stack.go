@@ -27,7 +27,7 @@ func NewGetOrderFunction(stack awscdk.Stack, config *StageConfig) awslambda.Func
 	}
 
 	lambdaFunction := awslambda.NewFunction(
-		stack, jsii.String("FunctionV1GetOrder"), &awslambda.FunctionProps{
+		stack, jsii.String("V1GetOrder"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get-order"),
 				&awss3assets.AssetOptions{
@@ -62,7 +62,7 @@ func NewGetOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fun
 	}
 
 	lambdaFunction := awslambda.NewFunction(
-		stack, jsii.String("FunctionV1GetOrders"), &awslambda.FunctionProps{
+		stack, jsii.String("V1GetOrders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-get-orders"),
 				&awss3assets.AssetOptions{
@@ -98,7 +98,7 @@ func NewPostOrdersFunction(stack awscdk.Stack, config *StageConfig) awslambda.Fu
 	}
 
 	lambdaFunction := awslambda.NewFunction(
-		stack, jsii.String("FunctionV1PostOrders"), &awslambda.FunctionProps{
+		stack, jsii.String("V1PostOrders"), &awslambda.FunctionProps{
 			Code: awslambda.Code_FromAsset(
 				jsii.String("../lambda-v1-post-orders"),
 				&awss3assets.AssetOptions{
@@ -150,7 +150,7 @@ func NewRestApi(stack awscdk.Stack, config *StageConfig) awscdk.Stack {
 	}
 
 	restApi := awsapigateway.NewSpecRestApi(
-		stack, NewIdWithStage(config, "OrderRestApi"), &awsapigateway.SpecRestApiProps{
+		stack, NewIdWithStage(config, "OrderApi"), &awsapigateway.SpecRestApiProps{
 			EndpointTypes: &[]awsapigateway.EndpointType{
 				awsapigateway.EndpointType_PRIVATE,
 			},
