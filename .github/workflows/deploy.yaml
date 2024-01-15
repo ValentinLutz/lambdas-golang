@@ -3,9 +3,6 @@ name: Deploy service
 on:
   workflow_call:
     inputs:
-      go-version:
-        required: true
-        type: string
       node-version:
         required: true
         type: string
@@ -39,8 +36,8 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: ${{ inputs.go-version }}
           cache: true
+          go-version-file: ./go.mod
           cache-dependency-path: ./go.sum
 
       - uses: magefile/mage-action@v3

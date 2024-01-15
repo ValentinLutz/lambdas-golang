@@ -10,7 +10,6 @@ jobs:
         project-path: [ services/order ]
     secrets: inherit
     with:
-      go-version: 1.21.6
       node-version: 20.10.0
       cdk-version: 2.117.0
 
