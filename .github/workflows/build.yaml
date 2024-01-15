@@ -3,9 +3,6 @@ name: Build, test and deploy service
 on:
   workflow_call:
     inputs:
-      go-version:
-        required: true
-        type: string
       node-version:
         required: true
         type: string
