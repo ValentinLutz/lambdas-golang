@@ -46,7 +46,7 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.files-changed == 'true' }}
     steps:
-      - name: changes detected
+      - name: Changes detected
         run: echo "File changes detected"
 
   lint:
