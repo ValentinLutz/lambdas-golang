@@ -55,7 +55,6 @@ jobs:
       - changes-gate
     secrets: inherit
     with:
-      go-version: ${{ inputs.go-version }}
       project-path: ${{ inputs.project-path }}
 
   test:
@@ -64,7 +63,6 @@ jobs:
       - changes-gate
     secrets: inherit
     with:
-      go-version: ${{ inputs.go-version }}
       project-path: ${{ inputs.project-path }}
 
   deploy:
@@ -75,7 +73,6 @@ jobs:
       - test
     secrets: inherit
     with:
-      go-version: ${{ inputs.go-version }}
       node-version: ${{ inputs.node-version }}
       cdk-version: ${{ inputs.cdk-version }}
       project-path: ${{ inputs.project-path }}
