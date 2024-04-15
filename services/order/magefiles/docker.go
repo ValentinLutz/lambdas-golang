@@ -16,7 +16,7 @@ type Docker mg.Namespace
 func (Docker) Up() error {
 	getOrSetDefaultDatabaseEnvVars()
 
-	os.Chdir("./deployment-docker")
+	os.Chdir("./deployment-local")
 	defer os.Chdir("..")
 
 	return sh.RunV(
@@ -34,7 +34,7 @@ func (Docker) Up() error {
 func (Docker) Down() error {
 	getOrSetDefaultDatabaseEnvVars()
 
-	os.Chdir("./deployment-docker")
+	os.Chdir("./deployment-local")
 	defer os.Chdir("..")
 
 	return sh.RunV(
@@ -49,7 +49,7 @@ func (Docker) Down() error {
 func (Docker) Logs() error {
 	getOrSetDefaultDatabaseEnvVars()
 
-	os.Chdir("./deployment-docker")
+	os.Chdir("./deployment-local")
 	defer os.Chdir("..")
 
 	return sh.RunV(

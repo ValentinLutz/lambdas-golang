@@ -1,10 +1,12 @@
 run:
   timeout: 5m
   tests: false
-  skip-dirs:
+
+issues:
+  exclude-dirs:
     - api-definition
     - deployment-aws
-    - deployment-docker
+    - deployment-local
     - magefiles
     - migration-database
     - test-integration
