@@ -12,3 +12,11 @@ bootstrap
 # Testing
 coverage.out
 coverage.html
+
+# Terraform / OpenTofu
+.terraform
+cdktf.out
+cdktf.log
+*terraform.*.tfstate*
+generated
+!bootstrap/

@@ -1,16 +1,19 @@
 module root
 
-go 1.22.2
+go 1.22
 
 require (
-	github.com/aws/aws-cdk-go/awscdk/v2 v2.137.0
-	github.com/aws/aws-lambda-go v1.46.0
+	github.com/aws/aws-cdk-go/awscdk/v2 v2.138.0
+	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/aws-sdk-go-v2 v1.26.1
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.28.6
 	github.com/aws/constructs-go/constructs/v10 v10.3.0
 	github.com/aws/jsii-runtime-go v1.97.0
+	github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.15.0
+	github.com/cdktf/cdktf-provider-random-go/random/v11 v11.0.1
 	github.com/google/uuid v1.6.0
+	github.com/hashicorp/terraform-cdk-go/cdktf v0.20.7
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.9
 	github.com/magefile/mage v1.15.0
