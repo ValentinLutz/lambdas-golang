@@ -36,6 +36,7 @@ func NewStack(scope constructs.Construct, region string, env string) {
 			Key:           jsii.String(stackName + ".terraform.tfstate"),
 			DynamodbTable: jsii.String("terraform-lock"),
 			Encrypt:       jsii.Bool(true),
+			Profile:       jsii.String(stageConfig.Profile),
 		})
 	}
 
