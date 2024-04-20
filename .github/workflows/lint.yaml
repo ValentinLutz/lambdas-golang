@@ -27,7 +27,7 @@ jobs:
           install-only: true
 
       - name: Run linters
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
           version: v1.55.2
           skip-pkg-cache: true
