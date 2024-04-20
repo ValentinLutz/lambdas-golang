@@ -65,16 +65,16 @@ jobs:
     with:
       project-path: ${{ inputs.project-path }}
 
-  deploy:
-    uses: ./.github/workflows/deploy.yaml
-    needs:
-      - changes-gate
-      - lint
-      - test
-    secrets: inherit
-    with:
-      node-version: ${{ inputs.node-version }}
-      cdk-version: ${{ inputs.cdk-version }}
-      project-path: ${{ inputs.project-path }}
-      region: ${{ inputs.region }}
-      environment: ${{ inputs.environment }}
+#  deploy:
+#    uses: ./.github/workflows/deploy.yaml
+#    needs:
+#      - changes-gate
+#      - lint
+#      - test
+#    secrets: inherit
+#    with:
+#      node-version: ${{ inputs.node-version }}
+#      cdk-version: ${{ inputs.cdk-version }}
+#      project-path: ${{ inputs.project-path }}
+#      region: ${{ inputs.region }}
+#      environment: ${{ inputs.environment }}
