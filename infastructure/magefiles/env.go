@@ -9,7 +9,6 @@ type StageProps struct {
 	Region      string
 	Environment string
 	Resource    string
-	Version     string
 }
 
 func getStageEnvVars() StageProps {
@@ -17,7 +16,6 @@ func getStageEnvVars() StageProps {
 		Region:      getEnvValueOrPanic("REGION"),
 		Environment: getEnvValueOrPanic("ENVIRONMENT"),
 		Resource:    getEnvValueOrPanic("RESOURCE"),
-		Version:     getEnvValueOrSetDefault("VERSION", "latest"),
 	}
 }
 

@@ -6,6 +6,7 @@ package main
 import (
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
+	"root/infastructure/util"
 )
 
 type Cdk mg.Namespace
@@ -22,8 +23,7 @@ func (Cdk) Diff() error {
 	stageEnvVars := getStageEnvVars()
 
 	return sh.RunV("cdktf",
-		"diff", createStackName(stageEnvVars),
-		"--var=commit_hash="+stageEnvVars.Version,
+		"diff", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -32,8 +32,7 @@ func (Cdk) Deploy() error {
 	stageEnvVars := getStageEnvVars()
 
 	return sh.RunV("cdktf",
-		"deploy", createStackName(stageEnvVars),
-		"--var=commit_hash="+stageEnvVars.Version,
+		"deploy", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -43,11 +42,6 @@ func (Cdk) Destroy() error {
 
 	return sh.RunV(
 		"cdktf",
-		"destroy", createStackName(stageEnvVars),
-		"--var=commit_hash="+stageEnvVars.Version,
+		"destroy", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
-}
-
-func createStackName(stageProps StageProps) string {
-	return stageProps.Resource + "-" + stageProps.Region + "-" + stageProps.Environment
 }

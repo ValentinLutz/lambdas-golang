@@ -6,15 +6,13 @@ import (
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/dynamodbtable"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/iamaccesskey"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/iamuser"
-	awsprov "github.com/cdktf/cdktf-provider-aws-go/aws/v19/provider"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucket"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketpublicaccessblock"
 	"github.com/cdktf/cdktf-provider-random-go/random/v11/id"
-	randprov "github.com/cdktf/cdktf-provider-random-go/random/v11/provider"
 	"github.com/hashicorp/terraform-cdk-go/cdktf"
+	"root/infastructure/provider"
+	"root/infastructure/util"
 )
-
-const ResourceName = "bootstrap"
 
 func NewStack(scope constructs.Construct, region string, env string) {
 	stageConfig, err := NewStageConfig(region, env)
@@ -22,38 +20,24 @@ func NewStack(scope constructs.Construct, region string, env string) {
 		panic(err)
 	}
 
-	stackName := ResourceName + "-" + region + "-" + env
-	stack := cdktf.NewTerraformStack(scope, jsii.String(stackName))
+	resource := "bootstrap"
+	stack := cdktf.NewTerraformStack(scope, jsii.String(util.StackName(resource, region, env)))
 
-	commitHash := cdktf.NewTerraformVariable(stack, jsii.String("commit_hash"), &cdktf.TerraformVariableConfig{
-		Type: jsii.String("string"),
-	})
-
-	if stageConfig.Bucket != nil {
-		cdktf.NewS3Backend(stack, &cdktf.S3BackendConfig{
-			Region:        jsii.String(stageConfig.Region),
-			Bucket:        stageConfig.Bucket,
-			Key:           jsii.String(stackName + ".terraform.tfstate"),
-			DynamodbTable: jsii.String("terraform-lock"),
-			Encrypt:       jsii.Bool(true),
-			Profile:       jsii.String(stageConfig.Profile),
-		})
+	awsProviderConfig := provider.AwsProviderConfig{
+		Region:      stageConfig.Region,
+		Environment: stageConfig.Environment,
+		Profile:     stageConfig.Profile,
+		Resource:    resource,
+		Commit:      util.GitCommit(),
+		Bucket:      *stageConfig.Bucket,
 	}
 
-	awsprov.NewAwsProvider(stack, jsii.String("aws-provider"), &awsprov.AwsProviderConfig{
-		Region:  jsii.String(stageConfig.Region),
-		Profile: jsii.String(stageConfig.Profile),
-		DefaultTags: &[]awsprov.AwsProviderDefaultTags{{&map[string]*string{
-			"custom:environment": jsii.String(stageConfig.Environment),
-			"custom:region":      jsii.String(stageConfig.Region),
-			"custom:resource":    jsii.String(ResourceName),
-			"custom:stack":       jsii.String(stackName),
-			"custom:iac":         jsii.String("cdktf"),
-			"custom:commit":      commitHash.StringValue(),
-		}}},
-	})
+	if stageConfig.Bucket != nil {
+		provider.NewS3Backend(stack, awsProviderConfig)
+	}
 
-	randprov.NewRandomProvider(stack, jsii.String("random-provider"), &randprov.RandomProviderConfig{})
+	provider.NewAwsProvider(stack, awsProviderConfig)
+	provider.NewRandomProvider(stack)
 
 	bootstrap(stack)
 }
