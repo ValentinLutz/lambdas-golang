@@ -7,11 +7,14 @@ import (
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/iamaccesskey"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/iamuser"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucket"
+	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketlifecycleconfiguration"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketpublicaccessblock"
+	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketserversideencryptionconfiguration"
+	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketversioning"
 	"github.com/cdktf/cdktf-provider-random-go/random/v11/id"
 	"github.com/hashicorp/terraform-cdk-go/cdktf"
 	"root/libraries/cdkutil"
-	provider2 "root/libraries/cdkutil/provider"
+	"root/libraries/cdkutil/provider"
 )
 
 func NewStack(scope constructs.Construct, region string, env string) {
@@ -23,7 +26,7 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	resource := "bootstrap"
 	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(resource, region, env)))
 
-	awsProviderConfig := provider2.AwsProviderConfig{
+	awsProviderConfig := provider.AwsProviderConfig{
 		Region:      stageConfig.Region,
 		Environment: stageConfig.Environment,
 		Profile:     stageConfig.Profile,
@@ -33,11 +36,11 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	}
 
 	if stageConfig.Bucket != nil {
-		provider2.NewS3Backend(stack, awsProviderConfig)
+		provider.NewS3Backend(stack, awsProviderConfig)
 	}
 
-	provider2.NewAwsProvider(stack, awsProviderConfig)
-	provider2.NewRandomProvider(stack)
+	provider.NewAwsProvider(stack, awsProviderConfig)
+	provider.NewRandomProvider(stack)
 
 	bootstrap(stack)
 }
@@ -60,19 +63,39 @@ func bootstrap(stack cdktf.TerraformStack) {
 		Lifecycle: &cdktf.TerraformResourceLifecycle{
 			PreventDestroy: jsii.Bool(true),
 		},
-		Versioning: &s3bucket.S3BucketVersioning{
-			Enabled: jsii.Bool(true),
-		},
-		ServerSideEncryptionConfiguration: &s3bucket.S3BucketServerSideEncryptionConfiguration{
-			Rule: &s3bucket.S3BucketServerSideEncryptionConfigurationRule{
-				ApplyServerSideEncryptionByDefault: &s3bucket.S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefault{
-					SseAlgorithm: jsii.String("AES256"),
-				},
-			},
+	})
+
+	s3bucketversioning.NewS3BucketVersioningA(stack, jsii.String("terraform-state-versioning"), &s3bucketversioning.S3BucketVersioningAConfig{
+		Bucket: bucket.Id(),
+		VersioningConfiguration: &s3bucketversioning.S3BucketVersioningVersioningConfiguration{
+			Status: jsii.String("Enabled"),
 		},
 	})
 
-	s3bucketpublicaccessblock.NewS3BucketPublicAccessBlock(stack, jsii.String("terraform-block-access"), &s3bucketpublicaccessblock.S3BucketPublicAccessBlockConfig{
+	s3bucketserversideencryptionconfiguration.NewS3BucketServerSideEncryptionConfigurationA(
+		stack, jsii.String("terraform-state-encryption"), &s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationAConfig{
+			Bucket: bucket.Id(),
+			Rule: &[]s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefaultA{
+				{SseAlgorithm: jsii.String("AES256")},
+			},
+		})
+
+	s3bucketlifecycleconfiguration.NewS3BucketLifecycleConfiguration(
+		stack, jsii.String("terraform-state-lifecycle"), &s3bucketlifecycleconfiguration.S3BucketLifecycleConfigurationConfig{
+			Bucket: bucket.Id(),
+			Rule: &[]s3bucketlifecycleconfiguration.S3BucketLifecycleConfigurationRule{
+				{
+					Id:     jsii.String("terraform-state-lifecycle-rule-1"),
+					Status: jsii.String("Enabled"),
+					NoncurrentVersionExpiration: &s3bucketlifecycleconfiguration.S3BucketLifecycleConfigurationRuleNoncurrentVersionExpiration{
+						NewerNoncurrentVersions: jsii.String("10"),
+						NoncurrentDays:          jsii.Number(1),
+					},
+				},
+			},
+		})
+
+	s3bucketpublicaccessblock.NewS3BucketPublicAccessBlock(stack, jsii.String("terraform-state-block-access"), &s3bucketpublicaccessblock.S3BucketPublicAccessBlockConfig{
 		Bucket:                bucket.Id(),
 		BlockPublicAcls:       jsii.Bool(true),
 		BlockPublicPolicy:     jsii.Bool(true),
