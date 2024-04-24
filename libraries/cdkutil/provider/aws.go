@@ -5,7 +5,7 @@ import (
 	"github.com/aws/jsii-runtime-go"
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/provider"
 	"github.com/hashicorp/terraform-cdk-go/cdktf"
-	"root/infastructure/util"
+	"root/libraries/cdkutil"
 )
 
 type AwsProviderConfig struct {
@@ -18,7 +18,7 @@ type AwsProviderConfig struct {
 }
 
 func NewS3Backend(scope constructs.Construct, config AwsProviderConfig) cdktf.S3Backend {
-	stackName := util.StackName(config.Resource, config.Region, config.Environment)
+	stackName := cdkutil.StackName(config.Resource, config.Region, config.Environment)
 
 	return cdktf.NewS3Backend(scope, &cdktf.S3BackendConfig{
 		Region:        jsii.String(config.Region),
@@ -31,7 +31,7 @@ func NewS3Backend(scope constructs.Construct, config AwsProviderConfig) cdktf.S3
 }
 
 func NewAwsProvider(scope constructs.Construct, config AwsProviderConfig) provider.AwsProvider {
-	stackName := util.StackName(config.Resource, config.Region, config.Environment)
+	stackName := cdkutil.StackName(config.Resource, config.Region, config.Environment)
 
 	awsProvider := provider.NewAwsProvider(scope, jsii.String("aws-provider"), &provider.AwsProviderConfig{
 		Region:  jsii.String(config.Region),

@@ -6,7 +6,7 @@ This module is responsible for creating the necessary resources to save CDKTF st
 
 1. Create a stack in the desired region and account.
     ```go
-    bootstrap.NewStack(app, "eu-central-1", "test")
+    NewStack(app, "eu-central-1", "test")
     ```
 2. Create a config for the deployment stage.
     ```go

@@ -1,4 +1,4 @@
-package bootstrap
+package main
 
 import (
 	"github.com/aws/constructs-go/constructs/v10"
@@ -10,8 +10,8 @@ import (
 	"github.com/cdktf/cdktf-provider-aws-go/aws/v19/s3bucketpublicaccessblock"
 	"github.com/cdktf/cdktf-provider-random-go/random/v11/id"
 	"github.com/hashicorp/terraform-cdk-go/cdktf"
-	"root/infastructure/provider"
-	"root/infastructure/util"
+	"root/libraries/cdkutil"
+	provider2 "root/libraries/cdkutil/provider"
 )
 
 func NewStack(scope constructs.Construct, region string, env string) {
@@ -21,23 +21,23 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	}
 
 	resource := "bootstrap"
-	stack := cdktf.NewTerraformStack(scope, jsii.String(util.StackName(resource, region, env)))
+	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(resource, region, env)))
 
-	awsProviderConfig := provider.AwsProviderConfig{
+	awsProviderConfig := provider2.AwsProviderConfig{
 		Region:      stageConfig.Region,
 		Environment: stageConfig.Environment,
 		Profile:     stageConfig.Profile,
 		Resource:    resource,
-		Commit:      util.GitCommit(),
+		Commit:      cdkutil.GitCommit(),
 		Bucket:      *stageConfig.Bucket,
 	}
 
 	if stageConfig.Bucket != nil {
-		provider.NewS3Backend(stack, awsProviderConfig)
+		provider2.NewS3Backend(stack, awsProviderConfig)
 	}
 
-	provider.NewAwsProvider(stack, awsProviderConfig)
-	provider.NewRandomProvider(stack)
+	provider2.NewAwsProvider(stack, awsProviderConfig)
+	provider2.NewRandomProvider(stack)
 
 	bootstrap(stack)
 }

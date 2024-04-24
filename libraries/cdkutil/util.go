@@ -1,4 +1,4 @@
-package util
+package cdkutil
 
 import "github.com/magefile/mage/sh"
 

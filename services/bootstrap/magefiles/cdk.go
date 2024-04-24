@@ -6,13 +6,17 @@ package main
 import (
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
-	"root/infastructure/util"
+	"os"
+	"root/libraries/cdkutil"
 )
 
 type Cdk mg.Namespace
 
 // Synth synthesizes the CDK stack
 func (Cdk) Synth() error {
+	os.Chdir("./deployment-aws")
+	defer os.Chdir("..")
+
 	return sh.RunV("cdktf",
 		"synth",
 	)
@@ -22,8 +26,11 @@ func (Cdk) Synth() error {
 func (Cdk) Diff() error {
 	stageEnvVars := getStageEnvVars()
 
+	os.Chdir("./deployment-aws")
+	defer os.Chdir("..")
+
 	return sh.RunV("cdktf",
-		"diff", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
+		"diff", cdkutil.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -31,8 +38,11 @@ func (Cdk) Diff() error {
 func (Cdk) Deploy() error {
 	stageEnvVars := getStageEnvVars()
 
+	os.Chdir("./deployment-aws")
+	defer os.Chdir("..")
+
 	return sh.RunV("cdktf",
-		"deploy", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
+		"deploy", cdkutil.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -40,8 +50,11 @@ func (Cdk) Deploy() error {
 func (Cdk) Destroy() error {
 	stageEnvVars := getStageEnvVars()
 
+	os.Chdir("./deployment-aws")
+	defer os.Chdir("..")
+
 	return sh.RunV(
 		"cdktf",
-		"destroy", util.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
+		"destroy", cdkutil.StackName(stageEnvVars.Resource, stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
