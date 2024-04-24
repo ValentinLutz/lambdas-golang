@@ -75,8 +75,13 @@ func bootstrap(stack cdktf.TerraformStack) {
 	s3bucketserversideencryptionconfiguration.NewS3BucketServerSideEncryptionConfigurationA(
 		stack, jsii.String("terraform-state-encryption"), &s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationAConfig{
 			Bucket: bucket.Id(),
-			Rule: &[]s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefaultA{
-				{SseAlgorithm: jsii.String("AES256")},
+			Rule: &[]s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationRuleA{
+				{
+					ApplyServerSideEncryptionByDefault: &s3bucketserversideencryptionconfiguration.S3BucketServerSideEncryptionConfigurationRuleApplyServerSideEncryptionByDefaultA{
+						SseAlgorithm: jsii.String("AES256"),
+					},
+					BucketKeyEnabled: jsii.Bool(true),
+				},
 			},
 		})
 
