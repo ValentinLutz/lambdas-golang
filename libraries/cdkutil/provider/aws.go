@@ -14,24 +14,25 @@ type AwsProviderConfig struct {
 	Profile     string
 	Resource    string
 	Commit      string
-	Bucket      string
+	Bucket      *string
 }
 
 func NewS3Backend(scope constructs.Construct, config AwsProviderConfig) cdktf.S3Backend {
-	stackName := cdkutil.StackName(config.Resource, config.Region, config.Environment)
+	stackStateFile := cdkutil.StackStateFile(config.Region, config.Environment, config.Resource)
 
 	return cdktf.NewS3Backend(scope, &cdktf.S3BackendConfig{
 		Region:        jsii.String(config.Region),
 		Profile:       jsii.String(config.Profile),
-		Key:           jsii.String(stackName + ".terraform.tfstate"),
+		Key:           jsii.String(stackStateFile),
 		DynamodbTable: jsii.String("terraform-lock"),
 		Encrypt:       jsii.Bool(true),
-		Bucket:        jsii.String(config.Bucket),
+		Bucket:        config.Bucket,
 	})
 }
 
 func NewAwsProvider(scope constructs.Construct, config AwsProviderConfig) provider.AwsProvider {
-	stackName := cdkutil.StackName(config.Resource, config.Region, config.Environment)
+	stackName := cdkutil.StackName(config.Region, config.Environment, config.Resource)
+	stackStateFile := cdkutil.StackStateFile(config.Region, config.Environment, config.Resource)
 
 	awsProvider := provider.NewAwsProvider(scope, jsii.String("aws-provider"), &provider.AwsProviderConfig{
 		Region:  jsii.String(config.Region),
@@ -43,6 +44,7 @@ func NewAwsProvider(scope constructs.Construct, config AwsProviderConfig) provid
 			"custom:iac":         jsii.String("cdktf"),
 			"custom:commit":      jsii.String(config.Commit),
 			"custom:stack":       jsii.String(stackName),
+			"custom:state":       jsii.String(stackStateFile),
 		}}},
 	})
 

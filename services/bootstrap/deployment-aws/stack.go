@@ -24,7 +24,7 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	}
 
 	resource := "bootstrap"
-	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(resource, region, env)))
+	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(stageConfig.Region, stageConfig.Environment, resource)))
 
 	awsProviderConfig := provider.AwsProviderConfig{
 		Region:      stageConfig.Region,
@@ -32,7 +32,7 @@ func NewStack(scope constructs.Construct, region string, env string) {
 		Profile:     stageConfig.Profile,
 		Resource:    resource,
 		Commit:      cdkutil.GitCommit(),
-		Bucket:      *stageConfig.Bucket,
+		Bucket:      stageConfig.Bucket,
 	}
 
 	if stageConfig.Bucket != nil {

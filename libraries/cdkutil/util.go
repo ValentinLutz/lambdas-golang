@@ -1,9 +1,15 @@
 package cdkutil
 
-import "github.com/magefile/mage/sh"
+import (
+	"github.com/magefile/mage/sh"
+)
 
-func StackName(resource string, region string, env string) string {
-	return resource + "-" + region + "-" + env
+func StackName(region string, env string, resource string) string {
+	return region + "-" + env + "-" + resource
+}
+
+func StackStateFile(region string, env string, resource string) string {
+	return region + "-" + env + "/" + resource + "/terraform.tfstate"
 }
 
 func GitCommit() string {
