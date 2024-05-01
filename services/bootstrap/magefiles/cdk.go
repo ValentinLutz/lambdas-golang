@@ -30,7 +30,7 @@ func (Cdk) Diff() error {
 	defer os.Chdir("..")
 
 	return sh.RunV("cdktf",
-		"diff", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+		"diff", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -42,7 +42,7 @@ func (Cdk) Deploy() error {
 	defer os.Chdir("..")
 
 	return sh.RunV("cdktf",
-		"deploy", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+		"deploy", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }
 
@@ -55,6 +55,6 @@ func (Cdk) Destroy() error {
 
 	return sh.RunV(
 		"cdktf",
-		"destroy", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+		"destroy", cdkutil.StackName(stageEnvVars.Region, stageEnvVars.Environment),
 	)
 }

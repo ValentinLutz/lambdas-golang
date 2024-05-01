@@ -31,7 +31,6 @@ func NewS3Backend(scope constructs.Construct, config AwsProviderConfig) cdktf.S3
 }
 
 func NewAwsProvider(scope constructs.Construct, config AwsProviderConfig) provider.AwsProvider {
-	stackName := cdkutil.StackName(config.Region, config.Environment, config.Resource)
 	stackStateFile := cdkutil.StackStateFile(config.Region, config.Environment, config.Resource)
 
 	awsProvider := provider.NewAwsProvider(scope, jsii.String("aws-provider"), &provider.AwsProviderConfig{
@@ -43,7 +42,6 @@ func NewAwsProvider(scope constructs.Construct, config AwsProviderConfig) provid
 			"custom:resource":    jsii.String(config.Resource),
 			"custom:iac":         jsii.String("cdktf"),
 			"custom:commit":      jsii.String(config.Commit),
-			"custom:stack":       jsii.String(stackName),
 			"custom:state":       jsii.String(stackStateFile),
 		}}},
 	})

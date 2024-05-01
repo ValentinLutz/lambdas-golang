@@ -4,8 +4,8 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-func StackName(region string, env string, resource string) string {
-	return region + "-" + env + "-" + resource
+func StackName(region string, env string) string {
+	return region + "-" + env
 }
 
 func StackStateFile(region string, env string, resource string) string {

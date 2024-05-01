@@ -24,7 +24,7 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	}
 
 	resource := "bootstrap"
-	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(stageConfig.Region, stageConfig.Environment, resource)))
+	stack := cdktf.NewTerraformStack(scope, jsii.String(cdkutil.StackName(stageConfig.Region, stageConfig.Environment)))
 
 	awsProviderConfig := provider.AwsProviderConfig{
 		Region:      stageConfig.Region,
@@ -42,10 +42,10 @@ func NewStack(scope constructs.Construct, region string, env string) {
 	provider.NewAwsProvider(stack, awsProviderConfig)
 	provider.NewRandomProvider(stack)
 
-	bootstrap(stack)
+	newResources(stack)
 }
 
-func bootstrap(stack cdktf.TerraformStack) {
+func newResources(stack cdktf.TerraformStack) {
 	iamUser := iamuser.NewIamUser(stack, jsii.String("terraform-user"), &iamuser.IamUserConfig{
 		Name: jsii.String("terraform"),
 	})
