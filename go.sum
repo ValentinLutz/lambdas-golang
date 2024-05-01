@@ -42,8 +42,8 @@ github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.2 h1:k+WD+6cERd59M
 github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.2/go.mod h1:CvFHBo0qcg8LUkJqIxQtP1rD/sNGv9bX3L2vHT2FUAo=
 github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv6/v2 v2.0.3 h1:8NLWOIVaxAtpUXv5reojlAeDP7R8yswm9mDONf7F/3o=
 github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv6/v2 v2.0.3/go.mod h1:ZjFqfhYpCLzh4z7ChcHCrkXfqCuEiRlNApDfJd6plts=
-github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.15.0 h1:9w7oklp3qN0o//ivuF1xd+SlIk56hD4o6ilJT6VIC6E=
-github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.15.0/go.mod h1:tFGnY/xIJNhwAIRw37Qi7R0N0vFqIy1DOOd5G+dFsn4=
+github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.16.0 h1:GbfMRVfHHsV2FoZ822Mvxwrn0qZL73knlcfdPLgkM1s=
+github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.16.0/go.mod h1:22iva2cC1wJ2VfNYqPrKDsDiNqFEd/d8KL9GWd9STTE=
 github.com/cdktf/cdktf-provider-random-go/random/v11 v11.0.1 h1:YsU5awlOk1Wmlya2cj/VJOO4OEHJR5qM+M50FWqQweg=
 github.com/cdktf/cdktf-provider-random-go/random/v11 v11.0.1/go.mod h1:MW7pk+iirpuuKmk4k3yINiS4v4pECD8NbxI+krwgl+0=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

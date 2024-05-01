@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.28.6
 	github.com/aws/constructs-go/constructs/v10 v10.3.0
 	github.com/aws/jsii-runtime-go v1.97.0
-	github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.15.0
+	github.com/cdktf/cdktf-provider-aws-go/aws/v19 v19.16.0
 	github.com/cdktf/cdktf-provider-random-go/random/v11 v11.0.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/terraform-cdk-go/cdktf v0.20.7
