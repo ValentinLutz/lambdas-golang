@@ -14,7 +14,7 @@ require (
 	github.com/cdktf/cdktf-provider-random-go/random/v11 v11.0.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/terraform-cdk-go/cdktf v0.20.7
-	github.com/jmoiron/sqlx v1.3.5
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/magefile/mage v1.15.0
 	github.com/maxatome/go-testdeep v1.14.0
