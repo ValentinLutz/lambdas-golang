@@ -1,7 +1,7 @@
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=
 github.com/Masterminds/semver/v3 v3.2.1/go.mod h1:qvl/7zhW3nngYb5+80sSMF+FG2BjYrf8m9wsX0PNOMQ=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.138.0 h1:DjLBg6QL1c9c9i7IslmXOs43SdnMXd4E2LnmLIrnoeM=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.138.0/go.mod h1:5v16UNDrkqbV9CJRKt8a1aBRnldnpHJNBi8H9oIS7ig=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.139.1 h1:Lg/PpFN0gJflrVLD5B0Ww7VzApJtOfQqfkKCWznBVoU=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.139.1/go.mod h1:5v16UNDrkqbV9CJRKt8a1aBRnldnpHJNBi8H9oIS7ig=
 github.com/aws/aws-lambda-go v1.47.0 h1:0H8s0vumYx/YKs4sE7YM0ktwL2eWse+kfopsRI1sXVI=
 github.com/aws/aws-lambda-go v1.47.0/go.mod h1:dpMpZgvWx5vuQJfBt0zqBha60q7Dd7RfgJv23DymV8A=
 github.com/aws/aws-sdk-go-v2 v1.26.1 h1:5554eUqIYVWpU0YmeeYZ0wU64H2VLBs8TlhRB2L+EkA=
