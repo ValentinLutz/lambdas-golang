@@ -57,18 +57,6 @@ func (Tofu) Plan() error {
 
 }
 
-// Apply applies the changes
-func (Tofu) Apply() error {
-	stageEnvVars := getStageEnvVars()
-
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-
-	return sh.RunV("tofu",
-		"apply",
-		"terraform.tfplan",
-	)
-}
-
 // Plandestroy creates an execution plan for destroying the resources
 func (Tofu) Plandestroy() error {
 	mg.Deps(Tofu.Init)
@@ -93,20 +81,6 @@ func (Tofu) Plandestroy() error {
 
 }
 
-// Destroy destroys the resources
-func (Tofu) Destroy() error {
-	mg.Deps(Tofu.Init)
-
-	stageEnvVars := getStageEnvVars()
-
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-
-	return sh.RunV("tofu",
-		"destroy",
-		"terraform.tfplan",
-	)
-}
-
 // Show shows the execution plan
 func (Tofu) Show() error {
 	stageEnvVars := getStageEnvVars()
@@ -118,4 +92,16 @@ func (Tofu) Show() error {
 		"terraform.tfplan",
 	)
 
+}
+
+// Apply applies the changes
+func (Tofu) Apply() error {
+	stageEnvVars := getStageEnvVars()
+
+	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+
+	return sh.RunV("tofu",
+		"apply",
+		"terraform.tfplan",
+	)
 }
