@@ -5,7 +5,6 @@ run:
 issues:
   exclude-dirs:
     - api-definition
-    - deployment-aws
     - deployment-local
     - magefiles
     - migration-database

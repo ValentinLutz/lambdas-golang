@@ -7,7 +7,6 @@ import (
 // Clean cleans generated files
 func Clean() error {
 	paths := []string{
-		"./deployment-aws/cdk.out",
 		"./lambda-v1-get-order/incoming/model.gen.go",
 		"./lambda-v1-get-orders/incoming/model.gen.go",
 		"./lambda-v1-post-orders/incoming/model.gen.go",
