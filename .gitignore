@@ -17,6 +17,7 @@ coverage.html
 .terraform
 cdktf.out
 cdktf.log
-*terraform.*.tfstate*
+*terraform.tfstate*
+*terraform.tfplan*
 generated
 !bootstrap/
