@@ -1,5 +1,5 @@
 module "bootstrap" {
-  source = "../../../modules/bootstrap"
+  source = "../../../modules/cheap"
 
   region      = var.region
   environment = var.environment

@@ -8,8 +8,8 @@ import (
 var s3BackendConfigs = map[string]*S3BackendConfig{
 	"eu-central-1-test": {
 		Profile:       "admin",
-		Bucket:        "terraform-state-9f3933f9",
-		DynamoDbTable: "terraform-lock-9f3933f9",
+		Bucket:        "monke-eu-central-1-test-tofu-state",
+		DynamoDbTable: "monke-eu-central-1-test-tofu-state-lock",
 		Encrypt:       "true",
 	},
 }

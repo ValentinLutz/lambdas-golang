@@ -3,19 +3,11 @@ resource "random_password" "database" {
   numeric = true
   upper   = true
   lower   = true
-}
-
-locals {
-  database_secret = {
-    username = aws_db_instance.database.username
-    password = aws_db_instance.database.password
-    endpoint = aws_db_instance.database.endpoint
-    name     = aws_db_instance.database.db_name
-  }
+  special = false
 }
 
 resource "aws_secretsmanager_secret" "database" {
-  name                    = "database"
+  name                    = module.database_name.name
   recovery_window_in_days = 0
 }
 
@@ -25,7 +17,8 @@ resource "aws_secretsmanager_secret_version" "database" {
 }
 
 resource "aws_db_instance" "database" {
-  db_name                             = ""
+  identifier                          = module.database_name.name
+  db_name                             = "postgresql"
   username                            = "master"
   password                            = random_password.database.result
   engine                              = "postgres"
