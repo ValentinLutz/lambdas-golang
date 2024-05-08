@@ -2,10 +2,13 @@ terraform {
   backend "s3" {}
 }
 
-locals {
-  default_tags = {
-    "custom:resource" = var.resource
-  }
+module "tags" {
+  source = "../../../modules/tags"
+
+  region      = var.region
+  environment = var.environment
+  project     = var.project
+  resource    = var.resource
 }
 
 provider "aws" {
@@ -13,6 +16,6 @@ provider "aws" {
   profile = var.profile
 
   default_tags {
-    tags = merge(var.default_tags, local.default_tags)
+    tags = module.tags.default_tags
   }
 }

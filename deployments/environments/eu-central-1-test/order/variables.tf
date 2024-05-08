@@ -1,5 +1,5 @@
 variable "region" {}
 variable "environment" {}
+variable "project" {}
 variable "profile" {}
 variable "resource" {}
-variable "default_tags" {}

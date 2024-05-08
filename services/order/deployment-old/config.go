@@ -12,22 +12,6 @@ import (
 )
 
 var stageConfigs = map[string]*StageConfig{
-	"eu-central-1-local": {
-		account:     "000000000000",
-		region:      "eu-central-1",
-		environment: "local",
-		endpointUrl: jsii.String("http://aws-localstack:4566"),
-		databaseProps: DatabaseConfig{
-			host:   "database-postgres",
-			port:   "5432",
-			name:   "test",
-			secret: "database-secret",
-		},
-		lambdaConfig: LambdaConfig{
-			architecture: GetArchitecture(),
-			orderRegion:  "NONE",
-		},
-	},
 	"eu-central-1-test": {
 		account:     "489721517942",
 		region:      "eu-central-1",

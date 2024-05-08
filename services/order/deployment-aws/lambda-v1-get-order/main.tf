@@ -1,11 +1,7 @@
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-
 data "archive_file" "v1_get_order" {
   type        = "zip"
-  source_file = "${path.root}/../../../../services/order/lambda-v1-get-order/bootstrap"
-  output_path = "${path.root}/.terraform/files/v1-get-order.zip"
+  source_file = "${path.module}/../../lambda-v1-get-order/bootstrap"
+  output_path = "${path.root}/.terraform/files/lambda-v1-get-order.zip"
 }
 
 data "aws_iam_policy_document" "v1_get_order_role_policy" {
@@ -22,12 +18,12 @@ data "aws_iam_policy_document" "v1_get_order_role_policy" {
 }
 
 resource "aws_iam_role" "v1_get_order" {
-  name               = "v1-get-order-${random_id.suffix.hex}"
+  name               = module.name.name
   assume_role_policy = data.aws_iam_policy_document.v1_get_order_role_policy.json
 }
 
 resource "aws_lambda_function" "v1_get_order" {
-  function_name    = "v1-get-order-${random_id.suffix.hex}"
+  function_name    = module.name.name
   role             = aws_iam_role.v1_get_order.arn
   handler          = "bootstrap"
   runtime          = "provided.al2023"
