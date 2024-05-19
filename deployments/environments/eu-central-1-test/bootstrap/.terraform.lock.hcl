@@ -2,9 +2,8 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.opentofu.org/hashicorp/aws" {
-  version     = "5.48.0"
-  constraints = "~> 5.48"
-  hashes = [
+  version = "5.48.0"
+  hashes  = [
     "h1:UL6B4QXA/ENh05gOYhJGAUWKvgVRhfmnzqQMobSEh9A=",
     "zh:212b33b4270a4f20025dec83b181b0e8044ef382491e0c89ad07c64d6dfacff0",
     "zh:2dd2dadd6fc8752edb6241bdac1bdd49ce64384527dc335a021d61d3870a0393",
@@ -20,9 +19,8 @@ provider "registry.opentofu.org/hashicorp/aws" {
 }
 
 provider "registry.opentofu.org/hashicorp/random" {
-  version     = "3.6.1"
-  constraints = "~> 3.6"
-  hashes = [
+  version = "3.6.1"
+  hashes  = [
     "h1:egGGMQ18ihxoFBTgL/6aRL2N5/0bTI738Mg+TTsvBHA=",
     "zh:1208af24d1f66e858740812dd5da12e8951b1ca75cc6edb1975ba22bfdeefb1b",
     "zh:19137e9b4d3c15e1d99d2352888b98ec0e69bd5b2e89049150379d7bbd115063",

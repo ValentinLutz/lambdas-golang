@@ -7,7 +7,6 @@ import (
 
 var s3BackendConfigs = map[string]*S3BackendConfig{
 	"eu-central-1-test": {
-		Profile:       "admin",
 		Bucket:        "monke-eu-central-1-test-tofu-state",
 		DynamoDbTable: "monke-eu-central-1-test-tofu-state-lock",
 		Encrypt:       "true",

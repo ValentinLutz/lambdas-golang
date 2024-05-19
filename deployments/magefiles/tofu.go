@@ -25,8 +25,8 @@ func (Tofu) Init() error {
 
 	return sh.RunV("tofu",
 		"init",
+		"-lockfile=readonly",
 		"-backend-config=region="+stageEnvVars.Region,
-		"-backend-config=profile="+backendConfig.Profile,
 		"-backend-config=bucket="+backendConfig.Bucket,
 		"-backend-config=dynamodb_table="+backendConfig.DynamoDbTable,
 		"-backend-config=encrypt="+backendConfig.Encrypt,
