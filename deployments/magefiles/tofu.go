@@ -24,7 +24,7 @@ func (Tofu) Upgrade() error {
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
 	defer os.Chdir("../../..")
 
-	return sh.RunV("tofu",
+	err = sh.RunV("tofu",
 		"init",
 		"-upgrade",
 		"-backend-config=region="+stageEnvVars.Region,
@@ -32,6 +32,17 @@ func (Tofu) Upgrade() error {
 		"-backend-config=dynamodb_table="+backendConfig.DynamoDbTable,
 		"-backend-config=encrypt="+backendConfig.Encrypt,
 		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+	)
+	if err != nil {
+		return err
+	}
+
+	return sh.RunV("tofu",
+		"providers",
+		"lock",
+		"-platform=darwin_amd64",
+		"-platform=linux_amd64",
+		"-platform=windows_amd64",
 	)
 }
 
