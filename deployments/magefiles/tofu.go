@@ -12,6 +12,29 @@ import (
 
 type Tofu mg.Namespace
 
+// Upgrade upgrade the terraform providers
+func (Tofu) Upgrade() error {
+	stageEnvVars := getStageEnvVars()
+
+	backendConfig, err := tfutil.NewS3BackendConfig()
+	if err != nil {
+		return err
+	}
+
+	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
+
+	return sh.RunV("tofu",
+		"init",
+		"-upgrade",
+		"-backend-config=region="+stageEnvVars.Region,
+		"-backend-config=bucket="+backendConfig.Bucket,
+		"-backend-config=dynamodb_table="+backendConfig.DynamoDbTable,
+		"-backend-config=encrypt="+backendConfig.Encrypt,
+		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+	)
+}
+
 // Init initializes the terraform project
 func (Tofu) Init() error {
 	stageEnvVars := getStageEnvVars()
@@ -22,6 +45,7 @@ func (Tofu) Init() error {
 	}
 
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
 
 	return sh.RunV("tofu",
 		"init",
@@ -46,6 +70,7 @@ func (Tofu) Plan() error {
 	}
 
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
 
 	return sh.RunV("tofu",
 		"plan",
@@ -69,6 +94,7 @@ func (Tofu) Plandestroy() error {
 	}
 
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
 
 	return sh.RunV("tofu",
 		"plan",
@@ -86,6 +112,7 @@ func (Tofu) Show() error {
 	stageEnvVars := getStageEnvVars()
 
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
 
 	return sh.RunV("tofu",
 		"show",
@@ -99,6 +126,7 @@ func (Tofu) Apply() error {
 	stageEnvVars := getStageEnvVars()
 
 	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
+	defer os.Chdir("../../..")
 
 	return sh.RunV("tofu",
 		"apply",
