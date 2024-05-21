@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/oklog/ulid/v2"
@@ -15,7 +16,7 @@ const (
 )
 
 var (
-	ErrInvalidRegion = fmt.Errorf("invalid region")
+	ErrInvalidRegion = errors.New("invalid region")
 )
 
 func NewRegion(value string) (Region, error) {

@@ -3,6 +3,7 @@ package incoming
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -21,8 +22,8 @@ type Handler struct {
 }
 
 var (
-	ErrDbSecretIdEnvNotSet  = fmt.Errorf("env DB_SECRET_ID not set")
-	ErrOrderRegionEnvNotSet = fmt.Errorf("env ORDER_REGION not set")
+	ErrDbSecretIdEnvNotSet  = errors.New("env DB_SECRET_ID not set")
+	ErrOrderRegionEnvNotSet = errors.New("env ORDER_REGION not set")
 )
 
 func NewHandler() (*Handler, error) {

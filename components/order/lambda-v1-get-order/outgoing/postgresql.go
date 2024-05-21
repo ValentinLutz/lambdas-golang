@@ -14,7 +14,7 @@ type OrderRepository struct {
 }
 
 var (
-	ErrOrderNotFound = fmt.Errorf("order not found")
+	ErrOrderNotFound = errors.New("order not found")
 )
 
 func NewOrderRepository(database *sqlx.DB) *OrderRepository {

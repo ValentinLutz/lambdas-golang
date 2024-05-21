@@ -3,6 +3,7 @@ run:
   tests: false
 
 issues:
+  max-same-issues: 0
   exclude-dirs:
     - api-definition
     - deployment-local

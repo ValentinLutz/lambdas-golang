@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"root/components/order/lambda-v1-get-orders/outgoing"
 
@@ -9,8 +10,8 @@ import (
 )
 
 var (
-	ErrInvalidOffset = fmt.Errorf("offset must be greater than or equal to 0")
-	ErrInvalidLimit  = fmt.Errorf("limit must be greater than 0")
+	ErrInvalidOffset = errors.New("offset must be greater than or equal to 0")
+	ErrInvalidLimit  = errors.New("limit must be greater than 0")
 )
 
 type OrderService struct {

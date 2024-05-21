@@ -3,8 +3,6 @@ package outgoing
 import (
 	"context"
 	"errors"
-	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -15,8 +13,8 @@ type OrderRepository struct {
 }
 
 var (
-	ErrFailedToGetOrders     = fmt.Errorf("failed to get orders")
-	ErrFailedToGetOrderItems = fmt.Errorf("failed to get order items")
+	ErrFailedToGetOrders     = errors.New("failed to get orders")
+	ErrFailedToGetOrderItems = errors.New("failed to get order items")
 )
 
 func NewOrderRepository(database *sqlx.DB) *OrderRepository {
