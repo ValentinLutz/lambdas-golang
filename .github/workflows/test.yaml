@@ -1,9 +1,9 @@
-name: Test service
+name: Test component
 
 on:
   workflow_call:
     inputs:
-      project-path:
+      component-path:
         required: true
         type: string
 
@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.project-path }}
+        working-directory: ${{ inputs.component-path }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           cache: true
           go-version-file: ./go.mod

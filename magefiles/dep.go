@@ -16,5 +16,5 @@ func (Dep) Install() error {
 	if err != nil {
 		return err
 	}
-	return sh.RunV("go", "install", "github.com/golangci/golangci-lint/cmd/golangci-lint@v1.57.2")
+	return sh.RunV("go", "install", "github.com/golangci/golangci-lint/cmd/golangci-lint@v1.58.2")
 }

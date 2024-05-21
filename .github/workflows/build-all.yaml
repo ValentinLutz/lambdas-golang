@@ -1,4 +1,4 @@
-name: Build, test and deploy all services
+name: Build, test and deploy all components
 
 on: [ push ]
 
@@ -7,13 +7,11 @@ jobs:
     uses: ./.github/workflows/build.yaml
     strategy:
       matrix:
-        project-path: [ services/order ]
+        component-path:
+          - components/order
     secrets: inherit
     with:
-      node-version: 20.10.0
-      cdk-version: 2.117.0
-
-      project-path: ${{ matrix.project-path }}
+      component-path: ${{ matrix.component-path }}
       region: eu-central-1
       environment: test
 

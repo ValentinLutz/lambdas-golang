@@ -1,9 +1,9 @@
-name: Lint service
+name: Lint component
 
 on:
   workflow_call:
     inputs:
-      project-path:
+      component-path:
         required: true
         type: string
 
@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ inputs.project-path }}
+        working-directory: ${{ inputs.component-path }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           cache: true
           go-version-file: ./go.mod
@@ -27,7 +27,6 @@ jobs:
           install-only: true
 
       - name: Run linters
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
         with:
-          version: v1.55.2
-          skip-pkg-cache: true
+          version: v1.58.2
