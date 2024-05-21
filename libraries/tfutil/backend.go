@@ -5,16 +5,23 @@ import (
 	"os"
 )
 
-var s3BackendConfigs = map[string]*S3BackendConfig{
+var configs = map[string]*Config{
 	"eu-central-1-test": {
-		Bucket:        "monke-eu-central-1-test-tofu-state",
-		DynamoDbTable: "monke-eu-central-1-test-tofu-state-lock",
-		Encrypt:       "true",
+		Project: "monke",
+		S3BackendConfig: &S3BackendConfig{
+			Bucket:        "monke-eu-central-1-test-tofu-state",
+			DynamoDbTable: "monke-eu-central-1-test-tofu-state-lock",
+			Encrypt:       "true",
+		},
 	},
 }
 
+type Config struct {
+	Project         string
+	S3BackendConfig *S3BackendConfig
+}
+
 type S3BackendConfig struct {
-	Profile       string
 	Bucket        string
 	DynamoDbTable string
 	Encrypt       string
@@ -26,7 +33,7 @@ var (
 	ErrEnvironmentEnvNotSet = fmt.Errorf("env ENVIRONMENT not set")
 )
 
-func NewS3BackendConfig() (*S3BackendConfig, error) {
+func NewConfig() (*Config, error) {
 	region, ok := os.LookupEnv("REGION")
 	if !ok {
 		return nil, ErrRegionEnvNotSet
@@ -38,10 +45,10 @@ func NewS3BackendConfig() (*S3BackendConfig, error) {
 	}
 
 	stageKey := region + "-" + env
-	stage, ok := s3BackendConfigs[stageKey]
+	stageConfig, ok := configs[stageKey]
 	if !ok {
 		return nil, fmt.Errorf("%w: %s", ErrStageConfigNotFound, stageKey)
 	}
 
-	return stage, nil
+	return stageConfig, nil
 }

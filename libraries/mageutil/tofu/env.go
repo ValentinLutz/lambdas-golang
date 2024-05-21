@@ -8,14 +8,12 @@ import (
 type StageProps struct {
 	Region      string
 	Environment string
-	Resource    string
 }
 
 func getStageEnvVars() StageProps {
 	return StageProps{
 		Region:      getEnvValueOrPanic("REGION"),
 		Environment: getEnvValueOrPanic("ENVIRONMENT"),
-		Resource:    getEnvValueOrPanic("RESOURCE"),
 	}
 }
 

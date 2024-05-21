@@ -9,26 +9,31 @@ import (
 
 type Tofu mg.Namespace
 
-// Upgrade upgrade the terraform providers
+// Upgrade upgrade the tofu providers
 func (Tofu) Upgrade() error {
 	stageEnvVars := getStageEnvVars()
 
-	backendConfig, err := tfutil.NewS3BackendConfig()
+	config, err := tfutil.NewConfig()
 	if err != nil {
 		return err
 	}
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	component, err := tfutil.NewComponentName()
+	if err != nil {
+		return err
+	}
+
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	err = sh.RunV("tofu",
 		"init",
 		"-upgrade",
 		"-backend-config=region="+stageEnvVars.Region,
-		"-backend-config=bucket="+backendConfig.Bucket,
-		"-backend-config=dynamodb_table="+backendConfig.DynamoDbTable,
-		"-backend-config=encrypt="+backendConfig.Encrypt,
-		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+		"-backend-config=bucket="+config.S3BackendConfig.Bucket,
+		"-backend-config=dynamodb_table="+config.S3BackendConfig.DynamoDbTable,
+		"-backend-config=encrypt="+config.S3BackendConfig.Encrypt,
+		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, component),
 	)
 	if err != nil {
 		return err
@@ -43,26 +48,31 @@ func (Tofu) Upgrade() error {
 	)
 }
 
-// Init initializes the terraform project
+// Init initializes the tofu project
 func (Tofu) Init() error {
 	stageEnvVars := getStageEnvVars()
 
-	backendConfig, err := tfutil.NewS3BackendConfig()
+	config, err := tfutil.NewConfig()
 	if err != nil {
 		return err
 	}
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	component, err := tfutil.NewComponentName()
+	if err != nil {
+		return err
+	}
+
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	return sh.RunV("tofu",
 		"init",
 		"-lockfile=readonly",
 		"-backend-config=region="+stageEnvVars.Region,
-		"-backend-config=bucket="+backendConfig.Bucket,
-		"-backend-config=dynamodb_table="+backendConfig.DynamoDbTable,
-		"-backend-config=encrypt="+backendConfig.Encrypt,
-		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, stageEnvVars.Resource),
+		"-backend-config=bucket="+config.S3BackendConfig.Bucket,
+		"-backend-config=dynamodb_table="+config.S3BackendConfig.DynamoDbTable,
+		"-backend-config=encrypt="+config.S3BackendConfig.Encrypt,
+		"-backend-config=key="+tfutil.NewStateFilePath(stageEnvVars.Region, stageEnvVars.Environment, component),
 	)
 }
 
@@ -72,55 +82,67 @@ func (Tofu) Plan() error {
 
 	stageEnvVars := getStageEnvVars()
 
-	backendConfig, err := tfutil.NewS3BackendConfig()
+	config, err := tfutil.NewConfig()
 	if err != nil {
 		return err
 	}
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	component, err := tfutil.NewComponentName()
+	if err != nil {
+		return err
+	}
+
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	return sh.RunV("tofu",
 		"plan",
 		"-out=terraform.tfplan",
-		"-var-file=../terraform.tfvars",
-		"-var=profile="+backendConfig.Profile,
-		"-var=resource="+stageEnvVars.Resource,
+		"-var=region="+stageEnvVars.Region,
+		"-var=environment="+stageEnvVars.Environment,
+		"-var=project="+config.Project,
+		"-var=component="+component,
 	)
 
 }
 
-// Plandestroy creates an execution plan for destroying the resources
+// Plandestroy creates an execution plan to destroy
 func (Tofu) Plandestroy() error {
 	mg.Deps(Tofu.Init)
 
 	stageEnvVars := getStageEnvVars()
 
-	backendConfig, err := tfutil.NewS3BackendConfig()
+	config, err := tfutil.NewConfig()
 	if err != nil {
 		return err
 	}
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	component, err := tfutil.NewComponentName()
+	if err != nil {
+		return err
+	}
+
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	return sh.RunV("tofu",
 		"plan",
 		"-out=terraform.tfplan",
-		"-var-file=../terraform.tfvars",
-		"-var=profile="+backendConfig.Profile,
-		"-var=resource="+stageEnvVars.Resource,
+		"-var=region="+stageEnvVars.Region,
+		"-var=environment="+stageEnvVars.Environment,
+		"-var=project="+config.Project,
+		"-var=component="+component,
 		"-destroy",
 	)
 
 }
 
-// Show shows the execution plan
+// Show shows the planned changes
 func (Tofu) Show() error {
 	stageEnvVars := getStageEnvVars()
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	return sh.RunV("tofu",
 		"show",
@@ -129,12 +151,12 @@ func (Tofu) Show() error {
 
 }
 
-// Apply applies the changes
+// Apply applies the planned changes
 func (Tofu) Apply() error {
 	stageEnvVars := getStageEnvVars()
 
-	os.Chdir("./environments/" + stageEnvVars.Region + "-" + stageEnvVars.Environment + "/" + stageEnvVars.Resource)
-	defer os.Chdir("../../..")
+	os.Chdir("./deployment-aws/" + stageEnvVars.Region + "-" + stageEnvVars.Environment)
+	defer os.Chdir("../..")
 
 	return sh.RunV("tofu",
 		"apply",
