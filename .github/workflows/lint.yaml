@@ -10,9 +10,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.component-path }}
     steps:
       - uses: actions/checkout@v4
 
@@ -22,11 +19,8 @@ jobs:
           go-version-file: ./go.mod
           cache-dependency-path: ./go.sum
 
-      - uses: magefile/mage-action@v3
-        with:
-          install-only: true
-
       - name: Run linters
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.58.2
+          working-directory: ${{ inputs.component-path }}

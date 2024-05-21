@@ -103,7 +103,6 @@ func (Tofu) Plan() error {
 		"-var=project="+config.Project,
 		"-var=component="+component,
 	)
-
 }
 
 // Plandestroy creates an execution plan to destroy
