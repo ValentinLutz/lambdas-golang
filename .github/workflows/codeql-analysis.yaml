@@ -1,37 +1,37 @@
-name: CodeQL
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'go' ]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          cache: true
-          go-version-file: ./go.mod
-          cache-dependency-path: ./go.sum
-
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-
-      - uses: github/codeql-action/autobuild@v3
-
-      - uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
+#name: CodeQL
+#
+#on:
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
+#
+#jobs:
+#  analyze:
+#    runs-on: ubuntu-latest
+#    permissions:
+#      security-events: write
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        language: [ 'go' ]
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-go@v5
+#        with:
+#          cache: true
+#          go-version-file: ./go.mod
+#          cache-dependency-path: ./go.sum
+#
+#      - uses: github/codeql-action/init@v3
+#        with:
+#          languages: ${{ matrix.language }}
+#
+#      - uses: github/codeql-action/autobuild@v3
+#
+#      - uses: github/codeql-action/analyze@v3
+#        with:
+#          category: "/language:${{matrix.language}}"

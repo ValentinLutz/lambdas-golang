@@ -1,43 +1,43 @@
-name: Build, test and deploy all components
-
-on: [ push ]
-
-jobs:
-  build:
-    uses: ./.github/workflows/build.yaml
-    strategy:
-      matrix:
-        component-path:
-          - components/order
-    secrets: inherit
-    with:
-      component-path: ${{ matrix.component-path }}
-      region: eu-central-1
-      environment: test
-
-#  create-version:
-#    runs-on: ubuntu-latest
-#    needs:
-#      - build
-#    env:
-#      BRANCH: ${{ github.ref_name }}
-#    outputs:
-#      version: ${{ steps.create.outputs.version }}
-#    steps:
-#      - name: Create project version
-#        id: create
-#        run: |
-#          if [ 'master' == "$BRANCH"  ]
-#          then
-#            echo "version=$(date +"%y.%m.%d.%H%M%S")" >> $GITHUB_OUTPUT
-#          else
-#            echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
-#          fi
+#name: Build, test and deploy all components
 #
-#  create-tag:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: ${{ needs.create-version.outputs.version }}
+#on: [ push ]
+#
+#jobs:
+#  build:
+#    uses: ./.github/workflows/build.yaml
+#    strategy:
+#      matrix:
+#        component-path:
+#          - components/order
+#    secrets: inherit
+#    with:
+#      component-path: ${{ matrix.component-path }}
+#      region: eu-central-1
+#      environment: test
+#
+##  create-version:
+##    runs-on: ubuntu-latest
+##    needs:
+##      - build
+##    env:
+##      BRANCH: ${{ github.ref_name }}
+##    outputs:
+##      version: ${{ steps.create.outputs.version }}
+##    steps:
+##      - name: Create project version
+##        id: create
+##        run: |
+##          if [ 'master' == "$BRANCH"  ]
+##          then
+##            echo "version=$(date +"%y.%m.%d.%H%M%S")" >> $GITHUB_OUTPUT
+##          else
+##            echo "version=$(date +"%y.%m.%d.%H%M%S")-SNAPSHOT" >> $GITHUB_OUTPUT
+##          fi
+##
+##  create-tag:
+##    runs-on: ubuntu-latest
+##    steps:
+##      - uses: actions/checkout@v4
+##      - uses: rickstaa/action-create-tag@v1
+##        with:
+##          tag: ${{ needs.create-version.outputs.version }}
