@@ -52,7 +52,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrdersFunctionArn }}/invocations"
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${get_orders_function_arn}/invocations"
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
     post:
@@ -78,7 +78,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .PostOrdersFunctionArn }}/invocations"
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${post_orders_function_arn}/invocations"
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
   /v1/orders/{order_id}:
@@ -113,7 +113,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       x-amazon-apigateway-integration:
         httpMethod: "POST"
-        uri: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/{{ .GetOrderFunctionArn }}/invocations"
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${get_order_function_arn}/invocations"
         type: "aws_proxy"
         passthroughBehavior: "when_no_match"
 components:

@@ -1,10 +1,10 @@
-data "archive_file" "v1_get_order" {
+data "archive_file" "lambda" {
   type        = "zip"
   source_file = "${path.module}/../../../lambda-v1-get-order/bootstrap"
   output_path = "${path.root}/.terraform/files/lambda-v1-get-order.zip"
 }
 
-data "aws_iam_policy_document" "v1_get_order_role_policy" {
+data "aws_iam_policy_document" "lambda" {
   version = "2012-10-17"
 
   statement {
@@ -17,21 +17,29 @@ data "aws_iam_policy_document" "v1_get_order_role_policy" {
   }
 }
 
-resource "aws_iam_role" "v1_get_order" {
+resource "aws_iam_role" "lambda" {
   name               = module.name.name
-  assume_role_policy = data.aws_iam_policy_document.v1_get_order_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.lambda.json
 }
 
-resource "aws_lambda_function" "v1_get_order" {
+resource "aws_lambda_permission" "lambda" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api_gateway_arn}/*"
+}
+
+resource "aws_lambda_function" "lambda" {
   function_name    = module.name.name
-  role             = aws_iam_role.v1_get_order.arn
+  role             = aws_iam_role.lambda.arn
   handler          = "bootstrap"
   runtime          = "provided.al2023"
   architectures    = ["arm64"]
   memory_size      = 128
   timeout          = 10
-  filename         = data.archive_file.v1_get_order.output_path
-  source_code_hash = data.archive_file.v1_get_order.output_base64sha256
+  filename         = data.archive_file.lambda.output_path
+  source_code_hash = data.archive_file.lambda.output_base64sha256
 
   tracing_config {
     mode = "Active"
@@ -47,12 +55,12 @@ resource "aws_lambda_function" "v1_get_order" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "v1_get_order" {
-  name              = "/aws/lambda/${aws_lambda_function.v1_get_order.function_name}"
+resource "aws_cloudwatch_log_group" "logs" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
   retention_in_days = 30
 }
 
-data "aws_iam_policy_document" "v1_get_order_policy" {
+data "aws_iam_policy_document" "logs" {
   version = "2012-10-17"
 
   statement {
@@ -63,12 +71,35 @@ data "aws_iam_policy_document" "v1_get_order_policy" {
       "logs:PutLogEvents"
     ]
     resources = [
-      aws_cloudwatch_log_group.v1_get_order.arn
+      aws_cloudwatch_log_group.logs.arn
     ]
   }
 }
 
-resource "aws_iam_role_policy" "v1_get_order" {
-  role   = aws_iam_role.v1_get_order.id
-  policy = data.aws_iam_policy_document.v1_get_order_policy.json
+resource "aws_iam_role_policy" "logs" {
+  name   = "AllowCloudWatchLogs"
+  role   = aws_iam_role.lambda.id
+  policy = data.aws_iam_policy_document.logs.json
+}
+
+data "aws_iam_policy_document" "xray" {
+  version = "2012-10-17"
+
+  statement {
+    effect  = "Allow"
+    actions = [
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords",
+      "xray:GetSamplingRules",
+      "xray:GetSamplingTargets",
+      "xray:GetSamplingStatisticSummaries"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "xray" {
+  name   = "AllowXRayTracing"
+  role   = aws_iam_role.lambda.id
+  policy = data.aws_iam_policy_document.xray.json
 }
