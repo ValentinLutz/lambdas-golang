@@ -1,0 +1,6 @@
+project: monke
+
+s3_backend:
+  bucket: monke-eu-central-1-test-tofu-state
+  dynamodb_table: monke-eu-central-1-test-tofu-state-lock
+  encrypt: true
