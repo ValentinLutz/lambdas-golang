@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "v1" {
 
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["489721517942"]
     }
   }
 }

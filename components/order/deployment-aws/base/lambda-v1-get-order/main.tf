@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "logs" {
       "logs:PutLogEvents"
     ]
     resources = [
-      aws_cloudwatch_log_group.logs.arn
+      "${aws_cloudwatch_log_group.logs.arn}:*"
     ]
   }
 }
