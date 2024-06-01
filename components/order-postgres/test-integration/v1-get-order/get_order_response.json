@@ -1,0 +1,17 @@
+{
+  "order_id": "01HK5W7JF32CM-EU-0GVJSF5RFM7PN",
+  "customer_id": "44bd6239-7e3d-4d4a-90a0-7d4676a00f5c",
+  "created_at": "1970-01-01T00:00:00Z",
+  "status": "order_placed",
+  "items": [
+    {
+      "name": "orange"
+    },
+    {
+      "name": "banana"
+    },
+    {
+      "name": "apple"
+    }
+  ]
+}

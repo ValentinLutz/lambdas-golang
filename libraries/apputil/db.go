@@ -1,11 +1,10 @@
 package apputil
 
 import (
+	"context"
 	"fmt"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
-
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
 type DatabaseConfig struct {
@@ -54,21 +53,22 @@ func NewDatabaseConfig(secret Secret) (*DatabaseConfig, error) {
 	}, nil
 }
 
-func NewDatabase(config *DatabaseConfig) (*sqlx.DB, error) {
+func NewDatabase(config *DatabaseConfig) (*pgxpool.Pool, error) {
 	psqlInfo := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s sslmode=disable",
 		config.Host, config.Port, config.Name, config.User, config.Password,
 	)
 
-	db, err := sqlx.Open("postgres", psqlInfo)
+	ctx := context.Background()
+
+	db, err := pgxpool.New(ctx, psqlInfo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	err = db.Ping()
+	err = db.Ping(ctx)
 	if err != nil {
-		_ = db.Close()
-
+		db.Close()
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
